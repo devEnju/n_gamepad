@@ -1,7 +1,9 @@
 # n Gamepad
+
 A Flutter plugin to listen to game controller inputs.
 
 ## Usage
+
 Add the following lines of code to your `FlutterActivity` in order to override Android's standard input settings for gamepads:
 
 ```kotlin
@@ -11,7 +13,7 @@ class MainActivity : FlutterActivity() {
     override fun onStart() {
         super.onStart()
 
-        view = window.findViewById<ViewGroup>(1).getChildAt(0)
+        view = window.findViewById<ViewGroup>(FLUTTER_VIEW_ID).getChildAt(0)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {

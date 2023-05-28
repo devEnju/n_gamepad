@@ -1,6 +1,5 @@
 package com.marvinvogl.n_gamepad
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.hardware.Sensor
@@ -10,6 +9,7 @@ import android.view.WindowManager.LayoutParams
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import io.flutter.embedding.android.FlutterActivity
 
 class GamepadObserver : DefaultLifecycleObserver {
     lateinit var activity: Activity
@@ -40,11 +40,10 @@ class GamepadObserver : DefaultLifecycleObserver {
         view.setOnGenericMotionListener(motion)
     }
 
-    @SuppressLint("ResourceType")
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
-        flutterView = activity.window.findViewById(1)
+        flutterView = activity.window.findViewById(FlutterActivity.FLUTTER_VIEW_ID)
 
         val view = flutterView.getChildAt(0)
 

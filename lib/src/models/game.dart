@@ -7,7 +7,7 @@ import 'protocol.dart';
 abstract class Game {
   Game(this.code);
 
-  late final BuildContext context;
+  late BuildContext context;
 
   final List<int> code;
 

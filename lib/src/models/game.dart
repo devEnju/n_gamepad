@@ -5,11 +5,17 @@ import '../pages/game_page.dart';
 import 'protocol.dart';
 
 abstract class Game {
-  Game(this.code);
-
-  late BuildContext context;
+  Game(
+    this.code, {
+    this.interfaceColor,
+    Duration? screenTimeout,
+  }) : screenTimeout = screenTimeout ?? const Duration(seconds: 10);
 
   final List<int> code;
+  final Color? interfaceColor;
+  final Duration screenTimeout;
+
+  late BuildContext context;
 
   int get states;
   int get updates;

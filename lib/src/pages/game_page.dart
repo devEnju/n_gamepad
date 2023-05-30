@@ -8,16 +8,10 @@ import '../models/protocol.dart';
 import '../connection.dart';
 
 class GamePage extends StatefulWidget {
-  const GamePage(
-    this.game,
-    this.initial, {
-    super.key,
-    Duration? duration,
-  }) : duration = duration ?? const Duration(seconds: 10);
+  const GamePage(this.game, this.initial, {super.key});
 
   final Game game;
   final StatePacket initial;
-  final Duration duration;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -38,7 +32,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _initTimer() {
     _screen = true;
     _timer = Timer(
-      widget.duration,
+      widget.game.screenTimeout,
       () => _switchScreenBrightness(false),
     );
   }
@@ -49,6 +43,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onTapDown: _screen ? _setTimer : _resetTimer,
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
+        backgroundColor: widget.game.interfaceColor,
         body: StreamBuilder<StatePacket>(
           initialData: widget.initial,
           stream: Connection.service.stream,

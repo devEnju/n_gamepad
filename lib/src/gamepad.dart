@@ -59,9 +59,9 @@ class Gamepad {
   ///
   /// Returns `true` if the listener is assigned, `false` if the listener was
   /// set to `null`. In order to reset the left [Joystick] event listener,
-  /// [assignJoystickLeftListener] needs to be called without specifying
+  /// [assignLeftJoystickListener] needs to be called without specifying
   /// anything.
-  bool assignJoystickLeftListener({Joystick? onEvent}) {
+  bool assignLeftJoystickListener({Joystick? onEvent}) {
     return JoystickHandler.left.assignMotionEvent(onEvent);
   }
 
@@ -71,9 +71,9 @@ class Gamepad {
   ///
   /// Returns `true` if the listener is assigned, `false` if the listener was
   /// set to `null`. In order to reset the right [Joystick] event listener,
-  /// [assignJoystickRightListener] needs to be called without specifying
+  /// [assignRightJoystickListener] needs to be called without specifying
   /// anything.
-  bool assignJoystickRightListener({Joystick? onEvent}) {
+  bool assignRightJoystickListener({Joystick? onEvent}) {
     return JoystickHandler.right.assignMotionEvent(onEvent);
   }
 
@@ -85,9 +85,9 @@ class Gamepad {
   /// listener previously assigned with the [assignButtonListener] method,
   /// `false` if the other possible listener for the left trigger in
   /// [TriggerHandler] is also set to `null`. In order to reset the left
-  /// [Trigger] event listener, [assignTriggerLeftListener] needs to be called
+  /// [Trigger] event listener, [assignLeftTriggerListener] needs to be called
   /// without specifying anything.
-  bool assignTriggerLeftListener({Trigger? onEvent}) {
+  bool assignLeftTriggerListener({Trigger? onEvent}) {
     return TriggerHandler.left.assignMotionEvent(onEvent);
   }
 
@@ -99,9 +99,9 @@ class Gamepad {
   /// listener previously assigned with the [assignButtonListener] method,
   /// `false` if the other possible listener for the right trigger in
   /// [TriggerHandler] is also set to `null`. In order to reset the right
-  /// [Trigger] event listener, [assignTriggerRightListener] needs to be called
+  /// [Trigger] event listener, [assignRightTriggerListener] needs to be called
   /// without specifying anything.
-  bool assignTriggerRightListener({Trigger? onEvent}) {
+  bool assignRightTriggerListener({Trigger? onEvent}) {
     return TriggerHandler.right.assignMotionEvent(onEvent);
   }
 
@@ -119,10 +119,10 @@ class Gamepad {
       assignButtonListener(value);
     }
     assignDpadListener();
-    assignJoystickLeftListener();
-    assignJoystickRightListener();
-    assignTriggerLeftListener();
-    assignTriggerRightListener();
+    assignLeftJoystickListener();
+    assignRightJoystickListener();
+    assignLeftTriggerListener();
+    assignRightTriggerListener();
   }
 }
 
@@ -234,18 +234,18 @@ class NetworkGamepad extends Gamepad {
   ///
   /// Automatically blocks transmission for the left joystick before assigning
   /// the listener. If the listener is reset by calling
-  /// [assignJoystickLeftListenerSafely]  without specifying anything, it
+  /// [assignLeftJoystickListenerSafely]  without specifying anything, it
   /// resumes transmission for the left joystick and only returns true if the
   /// left joystick had not already been stopped by the [stopTransmission]
   /// method sometime before.
   ///
   /// Returns null if the control could not be resumed because there are still
   /// listeners assigned to it.
-  Future<bool?> assignJoystickLeftListenerSafely({Joystick? onEvent}) async {
+  Future<bool?> assignLeftJoystickListenerSafely({Joystick? onEvent}) async {
     if (onEvent != null) {
       await GamepadPlatform.instance.blockControl(Control.jl);
     }
-    if (!assignJoystickLeftListener(onEvent: onEvent)) {
+    if (!assignLeftJoystickListener(onEvent: onEvent)) {
       return await GamepadPlatform.instance.resumeControl(Control.jl);
     }
     return null;
@@ -257,18 +257,18 @@ class NetworkGamepad extends Gamepad {
   ///
   /// Automatically blocks transmission for the right joystick before assigning
   /// the listener. If the listener is reset by calling
-  /// [assignJoystickRightListenerSafely]  without specifying anything, it
+  /// [assignRightJoystickListenerSafely]  without specifying anything, it
   /// resumes transmission for the right joystick and only returns true if the
   /// right joystick had not already been stopped by the [stopTransmission]
   /// method sometime before.
   ///
   /// Returns null if the control could not be resumed because there are still
   /// listeners assigned to it.
-  Future<bool?> assignJoystickRightListenerSafely({Joystick? onEvent}) async {
+  Future<bool?> assignRightJoystickListenerSafely({Joystick? onEvent}) async {
     if (onEvent != null) {
       await GamepadPlatform.instance.blockControl(Control.jr);
     }
-    if (!assignJoystickRightListener(onEvent: onEvent)) {
+    if (!assignRightJoystickListener(onEvent: onEvent)) {
       return await GamepadPlatform.instance.resumeControl(Control.jr);
     }
     return null;
@@ -280,18 +280,18 @@ class NetworkGamepad extends Gamepad {
   ///
   /// Automatically blocks transmission for the left trigger before assigning
   /// the listener. If the listener is reset by calling
-  /// [assignTriggerLeftListenerSafely]  without specifying anything, it
+  /// [assignLeftTriggerListenerSafely]  without specifying anything, it
   /// resumes transmission for the left trigger and only returns true if the
   /// left trigger had not already been stopped by the [stopTransmission] method
   /// sometime before.
   ///
   /// Returns null if the control could not be resumed because there are still
   /// listeners assigned to it.
-  Future<bool?> assignTriggerLeftListenerSafely({Trigger? onEvent}) async {
+  Future<bool?> assignLeftTriggerListenerSafely({Trigger? onEvent}) async {
     if (onEvent != null) {
       await GamepadPlatform.instance.blockControl(Control.zl);
     }
-    if (!assignTriggerLeftListener(onEvent: onEvent)) {
+    if (!assignLeftTriggerListener(onEvent: onEvent)) {
       return await GamepadPlatform.instance.resumeControl(Control.zl);
     }
     return null;
@@ -303,18 +303,18 @@ class NetworkGamepad extends Gamepad {
   ///
   /// Automatically blocks transmission for the right trigger before assigning
   /// the listener. If the listener is reset by calling
-  /// [assignTriggerRightListenerSafely]  without specifying anything, it
+  /// [assignRightTriggerListenerSafely]  without specifying anything, it
   /// resumes transmission for the right trigger and only returns true if the
   /// right trigger had not already been before by the [stopTransmission] method
   /// stopped sometime.
   ///
   /// Returns null if the control could not be resumed because there are still
   /// listeners assigned to it.
-  Future<bool?> assignTriggerRightListenerSafely({Trigger? onEvent}) async {
+  Future<bool?> assignRightTriggerListenerSafely({Trigger? onEvent}) async {
     if (onEvent != null) {
       await GamepadPlatform.instance.blockControl(Control.zr);
     }
-    if (!assignTriggerRightListener(onEvent: onEvent)) {
+    if (!assignRightTriggerListener(onEvent: onEvent)) {
       return await GamepadPlatform.instance.resumeControl(Control.zr);
     }
     return null;

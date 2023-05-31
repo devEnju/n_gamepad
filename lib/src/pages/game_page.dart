@@ -39,8 +39,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: _screen ? _setTimer : _resetTimer,
+    return Listener(
+      onPointerDown: _screen ? _setTimer : _resetTimer,
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
         backgroundColor: widget.game.interfaceColor,
@@ -81,12 +81,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void _setTimer(TapDownDetails details) {
+  void _setTimer(PointerDownEvent details) {
     _timer.cancel();
     _initTimer();
   }
 
-  void _resetTimer(TapDownDetails details) {
+  void _resetTimer(PointerDownEvent details) {
     _switchScreenBrightness(true);
 
     _setTimer(details);

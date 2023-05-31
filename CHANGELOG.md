@@ -2,6 +2,7 @@
 
 * Fixed bug caused by final member variable in game class
 * Added optional game constructor parameters for customization
+* Adjusted method names for left and right hand controls
 
 ## 0.0.1
 

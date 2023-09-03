@@ -18,29 +18,30 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
-  late bool _screen;
-  late Timer _timer;
+  late bool screen;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    _initTimer();
+    initTimer();
   }
 
-  void _initTimer() {
-    _screen = true;
-    _timer = Timer(
+  void initTimer() {
+    screen = true;
+    timer = Timer(
       widget.game.screenTimeout,
-      () => _switchScreenBrightness(false),
+      () => switchScreenBrightness(false),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerDown: _screen ? _setTimer : _resetTimer,
+      onPointerDown: (event) => screen ? cancelTimer() : resetTimer(),
+      onPointerUp: (event) => initTimer(),
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
         backgroundColor: widget.game.interfaceColor,
@@ -73,7 +74,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _timer.cancel();
+    timer.cancel();
     Connection.service.reset();
     WidgetsBinding.instance.removeObserver(this);
     Connection.gamepad.switchScreenBrightness(true);
@@ -81,19 +82,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void _setTimer(PointerDownEvent details) {
-    _timer.cancel();
-    _initTimer();
+  void cancelTimer() {
+    timer.cancel();
   }
 
-  void _resetTimer(PointerDownEvent details) {
-    _switchScreenBrightness(true);
+  void resetTimer() {
+    switchScreenBrightness(true);
 
-    _setTimer(details);
+    cancelTimer();
   }
 
-  Future<void> _switchScreenBrightness(bool state) async {
-    _screen = await Connection.gamepad.switchScreenBrightness(state);
+  Future<void> switchScreenBrightness(bool state) async {
+    screen = await Connection.gamepad.switchScreenBrightness(state);
     setState(() {});
   }
 }

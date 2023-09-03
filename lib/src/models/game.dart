@@ -7,11 +7,13 @@ import 'protocol.dart';
 abstract class Game {
   Game(
     this.code, {
+    this.name,
     this.interfaceColor,
     Duration? screenTimeout,
   }) : screenTimeout = screenTimeout ?? const Duration(seconds: 10);
 
   final List<int> code;
+  final String? name;
   final Color? interfaceColor;
   final Duration screenTimeout;
 

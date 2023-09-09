@@ -150,10 +150,13 @@ class StatePacket {
   }
 
   @override
-  bool operator ==(other) => other is StatePacket && state == other.state;
+  bool operator ==(other) =>
+      other is StatePacket &&
+      other.runtimeType == runtimeType &&
+      other.state == state;
 
   @override
-  int get hashCode => state;
+  int get hashCode => state.hashCode;
 }
 
 class UpdatePacket {

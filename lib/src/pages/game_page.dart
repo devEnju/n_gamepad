@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../models/game.dart';
+import '../models/layout.dart';
 import '../models/protocol.dart';
 
 import '../connection.dart';
@@ -18,45 +19,58 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
-  late bool screen;
-  late Timer timer;
+  late StatePacket previous;
+  late Stopwatch watch;
+  late Duration limit;
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    initTimer();
-  }
-
-  void initTimer() {
-    screen = true;
-    timer = Timer(
-      widget.game.screenTimeout,
-      () => switchScreenBrightness(false),
-    );
+    previous = widget.initial;
+    watch = Stopwatch();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (event) => screen ? cancelTimer() : resetTimer(),
-      onPointerUp: (event) => initTimer(),
-      behavior: HitTestBehavior.opaque,
-      child: Scaffold(
-        backgroundColor: widget.game.interfaceColor,
-        body: StreamBuilder<StatePacket>(
-          initialData: widget.initial,
-          stream: Connection.service.stream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return widget.game.buildLayout(snapshot.data!);
+    return Scaffold(
+      body: StreamBuilder<StatePacket>(
+        initialData: widget.initial,
+        stream: Connection.service.stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final current = snapshot.data!;
+
+            final layout = widget.game.buildLayout(current);
+
+            if (layout.screenTimeout == null) {
+              stopTimer();
+              timer = null;
+            } else if (timer == null) {
+              startTimer(layout.screenTimeout!.onInteraction);
+            } else if (previous != current) {
+              resetTimer(layout.screenTimeout?.onStateChange);
+            } else {
+              resetTimer(layout.screenTimeout?.onStateUpdate);
             }
-            return ErrorWidget.withDetails(
-              message: 'stream is null',
+            previous = current;
+
+            return Listener(
+              onPointerDown: (event) => cancelTimer(layout.screenTimeout),
+              onPointerUp: (event) => setTimer(layout.screenTimeout),
+              behavior: HitTestBehavior.translucent,
+              child: Container(
+                color: layout.backgroundColor,
+                child: layout.widget,
+              ),
             );
-          },
-        ),
+          }
+          return ErrorWidget.withDetails(
+            message: 'stream is null',
+          );
+        },
       ),
     );
   }
@@ -74,7 +88,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    timer.cancel();
     Connection.service.reset();
     WidgetsBinding.instance.removeObserver(this);
     Connection.gamepad.switchScreenBrightness(true);
@@ -82,18 +95,37 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void cancelTimer() {
-    timer.cancel();
+  void resetTimer(Duration? duration) {
+    if (duration != null && duration > limit - watch.elapsed) {
+      stopTimer();
+      startTimer(duration);
+    }
   }
 
-  void resetTimer() {
-    switchScreenBrightness(true);
-
-    cancelTimer();
+  void cancelTimer(ScreenTimeout? timeout) {
+    if (timeout != null) stopTimer();
   }
 
-  Future<void> switchScreenBrightness(bool state) async {
-    screen = await Connection.gamepad.switchScreenBrightness(state);
-    setState(() {});
+  void setTimer(ScreenTimeout? timeout) {
+    if (timeout != null) startTimer(timeout.onInteraction);
+  }
+
+  void stopTimer() {
+    timer?.cancel();
+    watch.stop();
+    watch.reset();
+
+    if (timer?.isActive == false) {
+      Connection.gamepad.switchScreenBrightness(true);
+    }
+  }
+
+  void startTimer(Duration duration) {
+    watch.start();
+    limit = duration;
+    timer = Timer(
+      duration,
+      () => Connection.gamepad.switchScreenBrightness(false),
+    );
   }
 }

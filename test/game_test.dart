@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:n_gamepad/src/models/game.dart';
+import 'package:n_gamepad/src/models/layout.dart';
 import 'package:n_gamepad/src/models/protocol.dart';
 
 class MockGame extends Game {
@@ -21,7 +22,7 @@ class MockGame extends Game {
   void closePage() {}
 
   @override
-  Widget buildLayout(StatePacket packet) => const Placeholder();
+  Layout buildLayout(StatePacket packet) => const Layout(widget: Placeholder());
 }
 
 void main() {

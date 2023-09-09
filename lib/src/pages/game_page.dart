@@ -39,7 +39,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final current = snapshot.data!;
-
             final layout = widget.game.buildLayout(current);
 
             if (layout.screenTimeout == null) {

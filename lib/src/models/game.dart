@@ -47,10 +47,11 @@ abstract class Game {
     );
   }
 
-  Layout buildLayout(StatePacket packet);
+  LayoutData buildLayout(StatePacket packet);
 }
 
 enum GameEffect {
+  light,
   rumble,
   sound,
 }

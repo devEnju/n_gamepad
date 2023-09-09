@@ -20,9 +20,7 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   late StatePacket previous;
-  late Stopwatch watch;
-  late Duration limit;
-  Timer? timer;
+  ObservableTimer? timer;
 
   @override
   void initState() {
@@ -30,7 +28,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     previous = widget.initial;
-    watch = Stopwatch();
   }
 
   @override
@@ -46,20 +43,24 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             final layout = widget.game.buildLayout(current);
 
             if (layout.screenTimeout == null) {
-              stopTimer();
+              timer?.cancel();
               timer = null;
             } else if (timer == null) {
-              startTimer(layout.screenTimeout!.onInteraction);
+              timer = ObservableTimer(
+                layout.screenTimeout!.onInteraction,
+                () => Connection.gamepad.switchScreenBrightness(false),
+                () => Connection.gamepad.switchScreenBrightness(true),
+              );
             } else if (previous != current) {
-              resetTimer(layout.screenTimeout?.onStateChange);
+              resetTimer(layout.screenTimeout!.onStateChange);
             } else {
-              resetTimer(layout.screenTimeout?.onStateUpdate);
+              resetTimer(layout.screenTimeout!.onStateUpdate);
             }
             previous = current;
 
             return Listener(
               onPointerDown: (event) => cancelTimer(layout.screenTimeout),
-              onPointerUp: (event) => setTimer(layout.screenTimeout),
+              onPointerUp: (event) => startTimer(layout.screenTimeout),
               behavior: HitTestBehavior.translucent,
               child: Container(
                 color: layout.backgroundColor,
@@ -96,36 +97,53 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void resetTimer(Duration? duration) {
-    if (duration != null && duration > limit - watch.elapsed) {
-      stopTimer();
-      startTimer(duration);
-    }
+    if (duration != null) timer!.reset(duration);
   }
 
   void cancelTimer(ScreenTimeout? timeout) {
-    if (timeout != null) stopTimer();
+    if (timeout != null) timer!.cancel();
   }
 
-  void setTimer(ScreenTimeout? timeout) {
-    if (timeout != null) startTimer(timeout.onInteraction);
+  void startTimer(ScreenTimeout? timeout) {
+    if (timeout != null) timer!.start(timeout.onInteraction);
+  }
+}
+
+class ObservableTimer {
+  ObservableTimer(
+    this._duration,
+    this._onEnd,
+    this._onCancel,
+  ) : _watch = Stopwatch() {
+    start(_duration);
   }
 
-  void stopTimer() {
-    timer?.cancel();
-    watch.stop();
-    watch.reset();
+  final void Function() _onEnd;
+  final void Function() _onCancel;
+  final Stopwatch _watch;
 
-    if (timer?.isActive == false) {
-      Connection.gamepad.switchScreenBrightness(true);
+  Duration _duration;
+
+  late Timer _timer;
+
+  void start(Duration duration) {
+    _duration = duration;
+    _watch.start();
+    _timer = Timer(_duration, _onEnd);
+  }
+
+  void cancel() {
+    if (!_timer.isActive) _onCancel.call();
+
+    _timer.cancel();
+    _watch.stop();
+    _watch.reset();
+  }
+
+  void reset(Duration duration) {
+    if (_duration - _watch.elapsed < duration) {
+      cancel();
+      start(duration);
     }
-  }
-
-  void startTimer(Duration duration) {
-    watch.start();
-    limit = duration;
-    timer = Timer(
-      duration,
-      () => Connection.gamepad.switchScreenBrightness(false),
-    );
   }
 }

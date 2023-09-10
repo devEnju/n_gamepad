@@ -19,8 +19,8 @@ class ObservableTimer {
 
   void start(Duration duration) {
     _duration = duration;
-    _watch.start();
     _timer = Timer(_duration, _onEnd);
+    _watch.start();
   }
 
   void cancel() {

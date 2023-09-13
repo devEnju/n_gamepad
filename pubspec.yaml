@@ -25,3 +25,5 @@ flutter:
       android:
         package: com.marvinvogl.n_gamepad
         pluginClass: GamepadPlugin
+      linux:
+        pluginClass: GamepadPlugin

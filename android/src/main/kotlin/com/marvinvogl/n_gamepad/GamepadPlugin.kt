@@ -72,7 +72,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         when (call.method) {
             "setAddress" -> {
                 val address = call.argument<String>("address")
-                val port = call.argument<String>("port")?.toInt()
+                val port = call.argument<Int>("port")
 
                 if (address != null && port != null) {
                     observer.connection.address = InetSocketAddress(InetAddress.getByName(address), port)
@@ -107,7 +107,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
             "resumeControl" -> {
                 val control = observer.gamepad.control[call.argument<String>("control")]
-                val safe = call.argument<String>("safe")?.toBoolean()
+                val safe = call.argument<Boolean>("safe")
 
                 if (control != null && safe != null) {
                     result.success(control.resume(safe))

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'src/models/control.dart';
@@ -10,7 +9,6 @@ import 'n_gamepad_platform_interface.dart';
 /// An implementation of [GamepadPlatform] that uses method channels.
 class MethodChannelGamepad extends GamepadPlatform {
   /// The method channel used to interact with the native platform.
-  @visibleForTesting
   static const methodChannel = MethodChannel('com.marvinvogl.n_gamepad/method');
 
   /// The event channel to receive dpad events with the native platform.

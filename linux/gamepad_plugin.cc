@@ -1,5 +1,4 @@
 #include "include/n_gamepad/gamepad_plugin.h"
-#include "include/steam/steam_api.h"
 
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
@@ -13,7 +12,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <thread>
 
 #define GAMEPAD_PLUGIN(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), gamepad_plugin_get_type(), \
@@ -78,8 +76,6 @@ FlMethodResponse* reset_address(FlMethodCall* method_call) {
 }
 
 static void gamepad_plugin_dispose(GObject* object) {
-  SteamInput()->Shutdown();
-  SteamAPI_Shutdown();
   G_OBJECT_CLASS(gamepad_plugin_parent_class)->dispose(object);
 }
 
@@ -87,46 +83,7 @@ static void gamepad_plugin_class_init(GamepadPluginClass* klass) {
   G_OBJECT_CLASS(klass)->dispose = gamepad_plugin_dispose;
 }
 
-void action_event_callback(SteamInputActionEvent_t *event) {
-  InputDigitalActionHandle_t aButtonActionHandle = SteamInput()->GetDigitalActionHandle("turn_left");
-  if (event->digitalAction.actionHandle == aButtonActionHandle && event->digitalAction.digitalActionData.bActive && event->digitalAction.digitalActionData.bState) {
-    g_message("left on");
-  } else if (event->digitalAction.actionHandle == aButtonActionHandle && event->digitalAction.digitalActionData.bActive && !event->digitalAction.digitalActionData.bState) {
-    g_message("left off");
-  }
-  InputDigitalActionHandle_t bButtonActionHandle = SteamInput()->GetDigitalActionHandle("turn_right");
-  if (event->digitalAction.actionHandle == bButtonActionHandle && event->digitalAction.digitalActionData.bActive && event->digitalAction.digitalActionData.bState) {
-    g_message("right on");
-  } else if (event->digitalAction.actionHandle == bButtonActionHandle && event->digitalAction.digitalActionData.bActive && !event->digitalAction.digitalActionData.bState) {
-    g_message("right off");
-  }
-  InputDigitalActionHandle_t xButtonActionHandle = SteamInput()->GetDigitalActionHandle("forward_thrust");
-  if (event->digitalAction.actionHandle == xButtonActionHandle && event->digitalAction.digitalActionData.bActive && event->digitalAction.digitalActionData.bState) {
-    g_message("up on");
-  } else if (event->digitalAction.actionHandle == xButtonActionHandle && event->digitalAction.digitalActionData.bActive && !event->digitalAction.digitalActionData.bState) {
-    g_message("up off");
-  }
-  InputDigitalActionHandle_t yButtonActionHandle = SteamInput()->GetDigitalActionHandle("backward_thrust");
-  if (event->digitalAction.actionHandle == yButtonActionHandle && event->digitalAction.digitalActionData.bActive && event->digitalAction.digitalActionData.bState) {
-    g_message("down on");
-  } else if (event->digitalAction.actionHandle == yButtonActionHandle && event->digitalAction.digitalActionData.bActive && !event->digitalAction.digitalActionData.bState) {
-    g_message("down off");
-  }
-}
-
-void gameLoop() {
-  SteamInput()->EnableActionEventCallbacks(action_event_callback);
-  while (true) SteamAPI_RunCallbacks();
-}
-
-static void gamepad_plugin_init(GamepadPlugin* self) {
-  if (SteamAPI_Init()) {
-    if (SteamInput()->Init(false)) {
-      std::thread gameThread(gameLoop);
-      gameThread.detach();
-    }
-  }
-}
+static void gamepad_plugin_init(GamepadPlugin* self) {}
 
 static void method_call_cb(FlMethodChannel* channel, FlMethodCall* method_call,
                            gpointer user_data) {

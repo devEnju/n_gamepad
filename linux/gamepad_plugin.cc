@@ -47,22 +47,22 @@ FlMethodResponse* set_address(FlMethodCall* method_call) {
   FlValue *address_val = fl_value_lookup_string(args, "address");
   FlValue *port_val = fl_value_lookup_string(args, "port");
 
-  if (address_val != nullptr && fl_value_get_type(address_val) == FL_VALUE_TYPE_STRING && port_val != nullptr && fl_value_get_type(port_val) == FL_VALUE_TYPE_STRING) {
-    const gchar *addr = fl_value_get_string(address_val);
-    const gchar *port = fl_value_get_string(port_val);
+  if (address_val != nullptr && fl_value_get_type(address_val) == FL_VALUE_TYPE_STRING && port_val != nullptr && fl_value_get_type(port_val) == FL_VALUE_TYPE_INT) {
+    const gchar *address = fl_value_get_string(address_val);
+    const int64_t port = fl_value_get_int(port_val);
 
     int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     struct sockaddr_in servaddr;
 
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    if (sockfd < 0) {
       g_warning("Failed to initialize the socket.");
     }
 
     std::memset(&servaddr, 0, sizeof(servaddr));
 
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(atoi(port));
-    servaddr.sin_addr.s_addr = inet_addr(addr);
+    servaddr.sin_port = htons(port);
+    servaddr.sin_addr.s_addr = inet_addr(address);
 
     // sendto(sockfd, buffer, strlen(buffer), 0, (const struct sockaddr *)&servaddr, sizeof(servaddr));
 

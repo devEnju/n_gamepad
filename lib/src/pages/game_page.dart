@@ -88,10 +88,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    timer?.cancel();
     Connection.service.reset();
-    WidgetsBinding.instance.removeObserver(this);
-    Connection.gamepad.switchScreenBrightness(true);
     Connection.gamepad.resetControls();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

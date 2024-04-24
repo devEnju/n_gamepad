@@ -39,7 +39,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final current = snapshot.data!;
-            final layout = widget.game.buildLayout(current);
+            final layout = widget.game.build(current);
 
             if (layout.screenTimeout == null) {
               timer?.cancel();
@@ -67,9 +67,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               ),
             );
           }
-          return ErrorWidget.withDetails(
-            message: 'stream is null',
-          );
+          return ErrorWidget.withDetails(message: 'stream is null');
         },
       ),
     );

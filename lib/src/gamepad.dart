@@ -111,7 +111,7 @@ class Gamepad {
   /// and triggers. After calling this method, no listeners will be active for
   /// any gamepad input. This can be useful when switching between different
   /// screens or game states where numerous input handlings need to be restored.
-  /// 
+  ///
   /// To reassign listeners, use the corresponding assign methods for each
   /// control.
   void resetControls() {
@@ -157,7 +157,7 @@ class NetworkGamepad extends Gamepad {
   }
 
   /// Resumes transmission of a specific [Control].
-  /// 
+  ///
   /// Both blocked and stopped controls are resumed by calling this method for
   /// the specified [control].
   Future<bool> resumeTransmission(Control control) {
@@ -189,7 +189,7 @@ class NetworkGamepad extends Gamepad {
   /// only specifying a [button], it resumes transmission for the [button] and
   /// only returns true if the button had not already been stopped by the
   /// [stopTransmission] method sometime before.
-  /// 
+  ///
   /// Returns null if the control could not be resumed because there are still
   /// listeners assigned to it.
   Future<bool?> assignButtonListenerSafely(
@@ -320,7 +320,6 @@ class NetworkGamepad extends Gamepad {
     return null;
   }
 
-
   /// Resets all control listeners to their default state and resumes their
   /// transmission.
   ///
@@ -329,7 +328,7 @@ class NetworkGamepad extends Gamepad {
   /// for any gamepad input. This can be useful when switching between different
   /// screens or game states where various input handlings need to be restored
   /// to their default and resumed.
-  /// 
+  ///
   /// To reassign listeners, use the corresponding assign methods for each
   /// control.
   @override

@@ -58,8 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => setState(() => _buttonA = _buttonA
                 ? Gamepad.instance.assignButtonListener(Button.a)
                 : Gamepad.instance.assignButtonListener(Button.a,
-                    onPress: () => setState(() => _text = '[ButtonEvent (a: pressed)]'),
-                    onRelease: () => setState(() => _text = '[ButtonEvent (a: released)]'))),
+                    onPress: () =>
+                        setState(() => _text = '[ButtonEvent (a: pressed)]'),
+                    onRelease: () =>
+                        setState(() => _text = '[ButtonEvent (a: released)]'))),
             icon: Text(
               'A',
               style: TextStyle(fontWeight: _buttonA ? FontWeight.bold : null),
@@ -69,8 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => setState(() => _buttonB = _buttonB
                 ? Gamepad.instance.assignButtonListener(Button.b)
                 : Gamepad.instance.assignButtonListener(Button.b,
-                    onPress: () => setState(() => _text = '[ButtonEvent (b: pressed)]'),
-                    onRelease: () => setState(() => _text = '[ButtonEvent (b: released)]'))),
+                    onPress: () =>
+                        setState(() => _text = '[ButtonEvent (b: pressed)]'),
+                    onRelease: () =>
+                        setState(() => _text = '[ButtonEvent (b: released)]'))),
             icon: Text(
               'B',
               style: TextStyle(fontWeight: _buttonB ? FontWeight.bold : null),
@@ -80,8 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => setState(() => _buttonX = _buttonX
                 ? Gamepad.instance.assignButtonListener(Button.x)
                 : Gamepad.instance.assignButtonListener(Button.x,
-                    onPress: () => setState(() => _text = '[ButtonEvent (x: pressed)]'),
-                    onRelease: () => setState(() => _text = '[ButtonEvent (x: released)]'))),
+                    onPress: () =>
+                        setState(() => _text = '[ButtonEvent (x: pressed)]'),
+                    onRelease: () =>
+                        setState(() => _text = '[ButtonEvent (x: released)]'))),
             icon: Text(
               'X',
               style: TextStyle(fontWeight: _buttonX ? FontWeight.bold : null),
@@ -91,8 +97,10 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => setState(() => _buttonY = _buttonY
                 ? Gamepad.instance.assignButtonListener(Button.y)
                 : Gamepad.instance.assignButtonListener(Button.y,
-                    onPress: () => setState(() => _text = '[ButtonEvent (y: pressed)]'),
-                    onRelease: () => setState(() => _text = '[ButtonEvent (y: released)]'))),
+                    onPress: () =>
+                        setState(() => _text = '[ButtonEvent (y: pressed)]'),
+                    onRelease: () =>
+                        setState(() => _text = '[ButtonEvent (y: released)]'))),
             icon: Text(
               'Y',
               style: TextStyle(fontWeight: _buttonY ? FontWeight.bold : null),

@@ -22,7 +22,11 @@ class MockGame extends Game {
   void closePage() {}
 
   @override
-  LayoutData buildLayout(StatePacket packet) => const LayoutData(Placeholder());
+  Layout build(StatePacket packet) => const MockLayout();
+}
+
+class MockLayout extends Layout {
+  const MockLayout() : super(const Placeholder());
 }
 
 void main() {

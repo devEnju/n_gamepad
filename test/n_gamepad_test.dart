@@ -9,19 +9,18 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class MockGamepadPlatform
     with MockPlatformInterfaceMixin
     implements GamepadPlatform {
-
   @override
   Future<void> setAddress(InternetAddress connection) async {}
 
   @override
   Future<void> resetAddress() async {}
-  
+
   @override
   Future<void> stopControl(Enum control) async {}
-  
+
   @override
   Future<void> blockControl(Enum control) async {}
-  
+
   @override
   Future<bool> resumeControl(Enum control, [bool block = true]) async => true;
 

@@ -24,7 +24,7 @@ class GamepadDevelopment extends GamepadPlatform {
 
   @override
   Future<bool> turnScreenOn() async => true;
-  
+
   @override
   Future<bool> turnScreenOff() async => false;
 }

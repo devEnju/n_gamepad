@@ -394,7 +394,7 @@ class StreamService {
   /// ```dart
   /// streamService.requestUpdate(GameUpdate.position);
   /// ```
-  /// 
+  ///
   /// In this example, the `GameUpdate.position` update is requested, which
   /// would activate constant updates to be received about a player's position
   /// in form of a valid [UpdatePacket].

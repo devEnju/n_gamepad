@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class LayoutData {
-  const LayoutData(
+abstract class Layout {
+  const Layout(
     this.widget, {
     this.backgroundColor,
     this.screenTimeout = const ScreenTimeout(

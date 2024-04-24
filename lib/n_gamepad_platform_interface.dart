@@ -51,7 +51,7 @@ abstract class GamepadPlatform extends PlatformInterface {
 
   /// A method to either resume safe and therefore blocked or stopped control
   /// transmissions to a previously set internet address on the platform.
-  /// 
+  ///
   /// Returns `true` if the control is resumed, otherwise `false`.
   Future<bool> resumeControl(Enum control, [bool safe = true]) {
     throw UnimplementedError('resumeControl() has not been implemented.');

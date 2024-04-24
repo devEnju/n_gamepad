@@ -26,7 +26,7 @@ import 'gamepad.dart';
 class Connection {
   /// Constructs a new [Connection] instance with the provided [socket] and
   /// [stream].
-  /// 
+  ///
   /// Refrain from instantiating objects via the constructor. The [instantiate]
   /// method should be used instead since it also creates an associated
   /// [StreamService] instance.
@@ -80,7 +80,7 @@ class Connection {
   /// service.
   ///
   /// Returns a [Connection] object after the Future has been resolved.
-  /// 
+  ///
   /// Errors of the [RawDatagramSocket] are uncaught.
   static Future<Connection> instantiate() async {
     if (_instance != null) destroy();

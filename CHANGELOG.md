@@ -1,3 +1,9 @@
+## 0.0.4
+
+* Refactored some game parameters into a layout class
+* Fixed and enhanced screen brightness timeout flexibility
+* Improved method channel variable passing
+
 ## 0.0.3
 
 * Altered user input detection when screen is turned off

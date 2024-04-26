@@ -5,7 +5,7 @@ A Flutter plugin to listen to game controller inputs.
 ## Features
 
 - Allows listening to controller inputs from gamepad accessories on Android phones
-- Provides a framework to implement multi-device functionality, as demonstrated in [this video](https://youtu.be/uCV56_td40o)
+- Provides a framework to implement multi-device functionality, as demonstrated in [this video](https://youtu.be/yzNlsgG5A7c)
 
 ## Getting started
 

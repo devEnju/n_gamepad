@@ -150,10 +150,13 @@ class StatePacket {
   }
 
   @override
-  bool operator ==(other) => other is StatePacket && state == other.state;
+  bool operator ==(other) =>
+      other is StatePacket &&
+      other.runtimeType == runtimeType &&
+      other.state == state;
 
   @override
-  int get hashCode => state;
+  int get hashCode => state.hashCode;
 }
 
 class UpdatePacket {
@@ -193,7 +196,7 @@ class EffectPacket {
 // |       1byte |  4bytes |  4bytes |  4bytes |
 // | 0b0000_0010 | float x | float y | float z |
 
-// input packet via key (Gyroscope)
+// input packet via key (Button)
 // |       1byte |   1byte |
 // | 0b0000_0100 |  char a |
 

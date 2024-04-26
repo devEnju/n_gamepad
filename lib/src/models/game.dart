@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../pages/game_page.dart';
 
+import 'layout.dart';
 import 'protocol.dart';
 
 abstract class Game {
   Game(
     this.code, {
     this.name,
-    this.interfaceColor,
-    Duration? screenTimeout,
-  }) : screenTimeout = screenTimeout ?? const Duration(seconds: 10);
+  });
 
   final List<int> code;
   final String? name;
-  final Color? interfaceColor;
-  final Duration screenTimeout;
 
   late BuildContext context;
 
@@ -50,10 +47,11 @@ abstract class Game {
     );
   }
 
-  Widget buildLayout(StatePacket packet);
+  Layout build(StatePacket packet);
 }
 
 enum GameEffect {
+  screen,
   rumble,
   sound,
 }

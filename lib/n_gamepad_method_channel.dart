@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'src/models/control.dart';
@@ -10,7 +9,6 @@ import 'n_gamepad_platform_interface.dart';
 /// An implementation of [GamepadPlatform] that uses method channels.
 class MethodChannelGamepad extends GamepadPlatform {
   /// The method channel used to interact with the native platform.
-  @visibleForTesting
   static const methodChannel = MethodChannel('com.marvinvogl.n_gamepad/method');
 
   /// The event channel to receive dpad events with the native platform.
@@ -46,9 +44,9 @@ class MethodChannelGamepad extends GamepadPlatform {
   Future<void> setAddress(InternetAddress connection) async {
     await methodChannel.invokeMethod(
       'setAddress',
-      <String, String>{
+      <String, dynamic>{
         'address': connection.address,
-        'port': '44700',
+        'port': 44700,
       },
     );
   }
@@ -65,7 +63,7 @@ class MethodChannelGamepad extends GamepadPlatform {
   Future<void> stopControl(Enum control) async {
     await methodChannel.invokeMethod(
       'stopControl',
-      <String, String>{
+      <String, dynamic>{
         'control': control.name,
       },
     );
@@ -77,7 +75,7 @@ class MethodChannelGamepad extends GamepadPlatform {
   Future<void> blockControl(Enum control) async {
     await methodChannel.invokeMethod(
       'blockControl',
-      <String, String>{
+      <String, dynamic>{
         'control': control.name,
       },
     );
@@ -85,15 +83,15 @@ class MethodChannelGamepad extends GamepadPlatform {
 
   /// A method to either resume safe and therefore blocked or stopped control
   /// transmissions to a previously set internet address on the platform.
-  /// 
+  ///
   /// Returns `true` if the control is resumed, otherwise `false`.
   @override
   Future<bool> resumeControl(Enum control, [bool safe = true]) {
     return methodChannel.invokeMethod(
       'resumeControl',
-      <String, String>{
+      <String, dynamic>{
         'control': control.name,
-        'safe': safe.toString(),
+        'safe': safe,
       },
     ).then<bool>((value) => value);
   }

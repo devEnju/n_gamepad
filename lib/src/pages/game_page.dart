@@ -1,8 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
+import '../helpers/timer.dart';
+
 import '../models/game.dart';
+import '../models/layout.dart';
 import '../models/protocol.dart';
 
 import '../connection.dart';
@@ -18,45 +19,56 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
-  late bool screen;
-  late Timer timer;
+  late StatePacket previous;
+  ObservableTimer? timer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    initTimer();
-  }
-
-  void initTimer() {
-    screen = true;
-    timer = Timer(
-      widget.game.screenTimeout,
-      () => switchScreenBrightness(false),
-    );
+    previous = widget.initial;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (event) => screen ? cancelTimer() : resetTimer(),
-      onPointerUp: (event) => initTimer(),
-      behavior: HitTestBehavior.opaque,
-      child: Scaffold(
-        backgroundColor: widget.game.interfaceColor,
-        body: StreamBuilder<StatePacket>(
-          initialData: widget.initial,
-          stream: Connection.service.stream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return widget.game.buildLayout(snapshot.data!);
+    return Scaffold(
+      body: StreamBuilder<StatePacket>(
+        initialData: widget.initial,
+        stream: Connection.service.stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final current = snapshot.data!;
+            final layout = widget.game.build(current);
+
+            if (layout.screenTimeout == null) {
+              timer?.cancel();
+              timer = null;
+            } else if (timer == null) {
+              timer = ObservableTimer(
+                layout.screenTimeout!.onInteraction,
+                () => Connection.gamepad.switchScreenBrightness(false),
+                () => Connection.gamepad.switchScreenBrightness(true),
+              );
+            } else if (previous != current) {
+              resetTimer(layout.screenTimeout!.onStateChange);
+            } else {
+              resetTimer(layout.screenTimeout!.onStateUpdate);
             }
-            return ErrorWidget.withDetails(
-              message: 'stream is null',
+            previous = current;
+
+            return Listener(
+              onPointerDown: (event) => cancelTimer(layout.screenTimeout),
+              onPointerUp: (event) => startTimer(layout.screenTimeout),
+              behavior: HitTestBehavior.translucent,
+              child: Container(
+                color: layout.backgroundColor,
+                child: layout.widget,
+              ),
             );
-          },
-        ),
+          }
+          return ErrorWidget.withDetails(message: 'stream is null');
+        },
       ),
     );
   }
@@ -74,26 +86,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    timer.cancel();
+    timer?.cancel();
     Connection.service.reset();
-    WidgetsBinding.instance.removeObserver(this);
-    Connection.gamepad.switchScreenBrightness(true);
     Connection.gamepad.resetControls();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  void cancelTimer() {
-    timer.cancel();
+  void resetTimer(Duration? duration) {
+    if (duration != null) timer!.reset(duration);
   }
 
-  void resetTimer() {
-    switchScreenBrightness(true);
-
-    cancelTimer();
+  void cancelTimer(ScreenTimeout? timeout) {
+    if (timeout != null) timer!.cancel();
   }
 
-  Future<void> switchScreenBrightness(bool state) async {
-    screen = await Connection.gamepad.switchScreenBrightness(state);
-    setState(() {});
+  void startTimer(ScreenTimeout? timeout) {
+    if (timeout != null) timer!.start(timeout.onInteraction);
   }
 }

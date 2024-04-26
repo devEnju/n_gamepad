@@ -1,5 +1,5 @@
 name: n_gamepad
-description: Flutter plugin for listening to various game controller inputs.
+description: "Flutter plugin for listening to various game controller inputs."
 repository: https://github.com/devEnju/n_gamepad
 issue_tracker: https://github.com/devEnju/n_gamepad/issues
 version: 0.0.4

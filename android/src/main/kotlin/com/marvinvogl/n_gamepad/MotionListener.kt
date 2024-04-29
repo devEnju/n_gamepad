@@ -15,7 +15,7 @@ class MotionListener(
 
     override fun onGenericMotion(v: View?, event: MotionEvent?): Boolean {
         if (event != null) {
-            if (event.source and InputDevice.SOURCE_JOYSTICK == InputDevice.SOURCE_JOYSTICK) {
+            if (event.isFromSource(InputDevice.SOURCE_JOYSTICK)) {
                 gamepad.dpad.onEvent(event)
                 gamepad.joystickLeft.onEvent(event)
                 gamepad.joystickRight.onEvent(event)

@@ -3,7 +3,9 @@ part of '../models/control.dart';
 typedef Trigger = void Function(TriggerEvent event);
 
 class TriggerEvent {
-  TriggerEvent(List<double> list) : z = list[0];
+  TriggerEvent(this.device, this.z);
+
+  final int device;
 
   final double z;
 

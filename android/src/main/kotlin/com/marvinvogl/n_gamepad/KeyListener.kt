@@ -20,13 +20,13 @@ class KeyListener(
 
             observer.flutterView.dispatchKeyEvent(event)
 
-            if (event.source and InputDevice.SOURCE_GAMEPAD == InputDevice.SOURCE_GAMEPAD) {
+            if (event.isFromSource(InputDevice.SOURCE_GAMEPAD)) {
                 gamepad.button[keyCode]?.onEvent(event) ?: return false
 
                 return connection.send(buffer)
             }
 
-            if (event.source and InputDevice.SOURCE_DPAD == InputDevice.SOURCE_DPAD) {
+            if (event.isFromSource(InputDevice.SOURCE_DPAD)) {
                 gamepad.dpad.onEvent(keyCode, event)
 
                 return connection.send(MotionListener.buffer)

@@ -33,7 +33,7 @@ class Dpad : Control(0b00001000) {
             x = data[0]
             y = data[1]
 
-            return prepareMotionData(MotionListener.buffer)
+            return prepareMotionData(event.deviceId, MotionListener.buffer)
         }
         return false
     }
@@ -47,14 +47,14 @@ class Dpad : Control(0b00001000) {
                 x = data[0]
                 y = data[1]
 
-                return prepareMotionData(MotionListener.buffer)
+                return prepareMotionData(event.deviceId, MotionListener.buffer)
             }
         }
         return false
     }
 
-    private fun prepareMotionData(buffer: ControlBuffer): Boolean {
-        sink?.success(data)
+    private fun prepareMotionData(id: Int, buffer: ControlBuffer): Boolean {
+        sink?.success(listOf(id, x, y))
 
         if (transmission) {
             buffer.bitfield += bitmask

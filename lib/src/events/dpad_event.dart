@@ -3,9 +3,9 @@ part of '../models/control.dart';
 typedef Dpad = void Function(DpadEvent event);
 
 class DpadEvent {
-  DpadEvent(List<int> list)
-      : x = list[0],
-        y = list[1];
+  DpadEvent(this.device, this.x, this.y);
+
+  final int device;
 
   final int x;
   final int y;

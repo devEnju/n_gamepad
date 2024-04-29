@@ -21,14 +21,14 @@ class Trigger(
             if (z != data[0]) {
                 z = data[0]
 
-                return prepareMotionData(MotionListener.buffer)
+                return prepareMotionData(event.deviceId, MotionListener.buffer)
             }
         }
         return false
     }
 
-    private fun prepareMotionData(buffer: ControlBuffer): Boolean {
-        sink?.success(data)
+    private fun prepareMotionData(id: Int, buffer: ControlBuffer): Boolean {
+        sink?.success(listOf(id, z))
 
         if (transmission) {
             buffer.bitfield += bitmask

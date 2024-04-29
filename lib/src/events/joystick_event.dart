@@ -3,9 +3,9 @@ part of '../models/control.dart';
 typedef Joystick = void Function(JoystickEvent event);
 
 class JoystickEvent {
-  JoystickEvent(List<double> list)
-      : x = list[0],
-        y = list[1];
+  JoystickEvent(this.device, this.x, this.y);
+
+  final int device;
 
   final double x;
   final double y;

@@ -19,10 +19,10 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     companion object {
         private const val METHOD = "com.marvinvogl.n_gamepad/method"
         private const val DPAD = "com.marvinvogl.n_gamepad/dpad"
-        private const val JOYSTICK_LEFT = "com.marvinvogl.n_gamepad/joystickLeft"
-        private const val JOYSTICK_RIGHT = "com.marvinvogl.n_gamepad/joystickRight"
-        private const val TRIGGER_LEFT = "com.marvinvogl.n_gamepad/triggerLeft"
-        private const val TRIGGER_RIGHT = "com.marvinvogl.n_gamepad/triggerRight"
+        private const val JOYSTICK_LEFT = "com.marvinvogl.n_gamepad/joystick_left"
+        private const val JOYSTICK_RIGHT = "com.marvinvogl.n_gamepad/joystick_right"
+        private const val TRIGGER_LEFT = "com.marvinvogl.n_gamepad/trigger_left"
+        private const val TRIGGER_RIGHT = "com.marvinvogl.n_gamepad/trigger_right"
     }
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
@@ -70,7 +70,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
-            "setAddress" -> {
+            "set_address" -> {
                 val address = call.argument<String>("address")
                 val port = call.argument<Int>("port")
 
@@ -81,11 +81,11 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     result.error("UNAVAILABLE", "Address unable to be set.", null)
                 }
             }
-            "resetAddress" -> {
+            "reset_address" -> {
                 observer.connection.address = null
                 result.success(null)
             }
-            "stopControl" -> {
+            "stop_control" -> {
                 val control = observer.gamepad.control[call.argument<String>("control")]
 
                 if (control != null) {
@@ -95,7 +95,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     result.error("UNAVAILABLE", "Control unable to be stopped.", null)
                 }
             }
-            "blockControl" -> {
+            "block_control" -> {
                 val control = observer.gamepad.control[call.argument<String>("control")]
 
                 if (control != null) {
@@ -105,7 +105,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     result.error("UNAVAILABLE", "Control unable to be blocked.", null)
                 }
             }
-            "resumeControl" -> {
+            "resume_control" -> {
                 val control = observer.gamepad.control[call.argument<String>("control")]
                 val safe = call.argument<Boolean>("safe")
 
@@ -115,11 +115,11 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     result.error("UNAVAILABLE", "Control unable to be resumed.", null)
                 }
             }
-            "turnScreenOn" -> {
+            "turn_screen_on" -> {
                 observer.switchScreenBrightness(LayoutParams.BRIGHTNESS_OVERRIDE_NONE)
                 result.success(true)
             }
-            "turnScreenOff" -> {
+            "turn_screen_off" -> {
                 observer.switchScreenBrightness(LayoutParams.BRIGHTNESS_OVERRIDE_OFF)
                 result.success(false)
             }

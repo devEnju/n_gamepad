@@ -73,28 +73,23 @@ abstract class GamepadPlatform extends PlatformInterface {
     throw UnimplementedError('turnScreenOff() has not been implemented.');
   }
 
+  /// A broadcast stream of events from a button of a gamepad.
+  Stream<ButtonEvent> get buttonEvents {
+    throw UnimplementedError('buttonEvents has not been implemented.');
+  }
+
   /// A broadcast stream of events from the dpad of a gamepad.
   Stream<DpadEvent> get dpadEvents {
     throw UnimplementedError('dpadEvents has not been implemented.');
   }
 
-  /// A broadcast stream of events from the left joystick of a gamepad.
-  Stream<JoystickEvent> get joystickLeftEvents {
-    throw UnimplementedError('joystickLeftEvents has not been implemented.');
+  /// A broadcast stream of events from a joystick of a gamepad.
+  Stream<JoystickEvent> get joystickEvents {
+    throw UnimplementedError('joystickEvents has not been implemented.');
   }
 
-  /// A broadcast stream of events from the right joystick of a gamepad.
-  Stream<JoystickEvent> get joystickRightEvents {
-    throw UnimplementedError('joystickRightEvents has not been implemented.');
-  }
-
-  /// A broadcast stream of events from the left trigger of a gamepad.
-  Stream<TriggerEvent> get triggerLeftEvents {
-    throw UnimplementedError('triggerLeftEvents has not been implemented.');
-  }
-
-  /// A broadcast stream of events from the right trigger of a gamepad.
-  Stream<TriggerEvent> get triggerRightEvents {
-    throw UnimplementedError('triggerRightEvents has not been implemented.');
+  /// A broadcast stream of events from a trigger of a gamepad.
+  Stream<TriggerEvent> get triggerEvents {
+    throw UnimplementedError('triggerEvents has not been implemented.');
   }
 }

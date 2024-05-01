@@ -26,7 +26,7 @@ class Joystick(
     }
 
     private fun prepareMotionData(id: Int, buffer: ControlBuffer): Boolean {
-        sink?.success(listOf(id, x, y))
+        Handler.joystick.sink?.success(listOf(hand.ordinal, id, x, y))
 
         if (transmission) {
             buffer.bitfield += bitmask

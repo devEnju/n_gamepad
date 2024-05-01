@@ -54,7 +54,7 @@ class Dpad : Control(0b00001000) {
     }
 
     private fun prepareMotionData(id: Int, buffer: ControlBuffer): Boolean {
-        sink?.success(listOf(id, x, y))
+        Handler.dpad.sink?.success(listOf(id, x, y))
 
         if (transmission) {
             buffer.bitfield += bitmask

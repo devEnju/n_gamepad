@@ -11,33 +11,24 @@ class MethodChannelGamepad extends GamepadPlatform {
   /// The method channel used to interact with the native platform.
   static const methodChannel = MethodChannel('com.marvinvogl.n_gamepad/method');
 
-  /// The event channel to receive dpad events with the native platform.
+  /// The event channel to receive button events from the native platform.
+  static const buttonChannel = EventChannel('com.marvinvogl.n_gamepad/button');
+
+  /// The event channel to receive dpad events from the native platform.
   static const dpadChannel = EventChannel('com.marvinvogl.n_gamepad/dpad');
 
-  /// The event channel to receive left joystick events with the native
-  /// platform.
-  static const joystickLeftChannel =
-      EventChannel('com.marvinvogl.n_gamepad/joystick_left');
+  /// The event channel to receive joystick events from the native platform.
+  static const joystickChannel =
+      EventChannel('com.marvinvogl.n_gamepad/joystick');
 
-  /// The event channel to receive right joystick events with the native
-  /// platform.
-  static const joystickRightChannel =
-      EventChannel('com.marvinvogl.n_gamepad/joystick_right');
+  /// The event channel to receive trigger events from the native platform.
+  static const triggerChannel =
+      EventChannel('com.marvinvogl.n_gamepad/trigger');
 
-  /// The event channel to receive left trigger events with the native platform.
-  static const triggerLeftChannel =
-      EventChannel('com.marvinvogl.n_gamepad/trigger_left');
-
-  /// The event channel to receive right trigger events with the native
-  /// platform.
-  static const triggerRightChannel =
-      EventChannel('com.marvinvogl.n_gamepad/trigger_right');
-
+  Stream<ButtonEvent>? _buttonEvents;
   Stream<DpadEvent>? _dpadEvents;
-  Stream<JoystickEvent>? _joystickLeftEvents;
-  Stream<JoystickEvent>? _joystickRightEvents;
-  Stream<TriggerEvent>? _triggerLeftEvents;
-  Stream<TriggerEvent>? _triggerRightEvents;
+  Stream<JoystickEvent>? _joystickEvents;
+  Stream<TriggerEvent>? _triggerEvents;
 
   /// A method to set an internet address on the platform.
   @override
@@ -127,39 +118,30 @@ class MethodChannelGamepad extends GamepadPlatform {
     return _dpadEvents!;
   }
 
-  /// A broadcast stream of events from the left joystick of a gamepad.
+  /// A broadcast stream of events from a button of a gamepad.
   @override
-  Stream<JoystickEvent> get joystickLeftEvents {
-    _joystickLeftEvents ??= joystickLeftChannel
+  Stream<ButtonEvent> get buttonEvents {
+    _buttonEvents ??= buttonChannel
         .receiveBroadcastStream()
-        .map((event) => JoystickEvent(event[0], event[1], event[2]));
-    return _joystickLeftEvents!;
+        .map((event) => ButtonEvent(event[0], event[1], event[2]));
+    return _buttonEvents!;
   }
 
-  /// A broadcast stream of events from the right joystick of a gamepad.
+  /// A broadcast stream of events from a joystick of a gamepad.
   @override
-  Stream<JoystickEvent> get joystickRightEvents {
-    _joystickRightEvents ??= joystickRightChannel
+  Stream<JoystickEvent> get joystickEvents {
+    _joystickEvents ??= joystickChannel
         .receiveBroadcastStream()
-        .map((event) => JoystickEvent(event[0], event[1], event[2]));
-    return _joystickRightEvents!;
+        .map((event) => JoystickEvent(event[0], event[1], event[2], event[3]));
+    return _joystickEvents!;
   }
 
-  /// A broadcast stream of events from the left trigger of a gamepad.
+  /// A broadcast stream of events from a trigger of a gamepad.
   @override
-  Stream<TriggerEvent> get triggerLeftEvents {
-    _triggerLeftEvents ??= triggerLeftChannel
+  Stream<TriggerEvent> get triggerEvents {
+    _triggerEvents ??= triggerChannel
         .receiveBroadcastStream()
-        .map((event) => TriggerEvent(event[0], event[1]));
-    return _triggerLeftEvents!;
-  }
-
-  /// A broadcast stream of events from the right trigger of a gamepad.
-  @override
-  Stream<TriggerEvent> get triggerRightEvents {
-    _triggerRightEvents ??= triggerRightChannel
-        .receiveBroadcastStream()
-        .map((event) => TriggerEvent(event[0], event[1]));
-    return _triggerRightEvents!;
+        .map((event) => TriggerEvent(event[0], event[1], event[1]));
+    return _triggerEvents!;
   }
 }

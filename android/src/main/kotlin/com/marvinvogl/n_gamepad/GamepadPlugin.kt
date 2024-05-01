@@ -18,54 +18,43 @@ import java.net.InetSocketAddress
 class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     companion object {
         private const val METHOD = "com.marvinvogl.n_gamepad/method"
+        private const val BUTTON = "com.marvinvogl.n_gamepad/button"
         private const val DPAD = "com.marvinvogl.n_gamepad/dpad"
-        private const val JOYSTICK_LEFT = "com.marvinvogl.n_gamepad/joystick_left"
-        private const val JOYSTICK_RIGHT = "com.marvinvogl.n_gamepad/joystick_right"
-        private const val TRIGGER_LEFT = "com.marvinvogl.n_gamepad/trigger_left"
-        private const val TRIGGER_RIGHT = "com.marvinvogl.n_gamepad/trigger_right"
+        private const val JOYSTICK = "com.marvinvogl.n_gamepad/joystick"
+        private const val TRIGGER = "com.marvinvogl.n_gamepad/trigger"
     }
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
+    private lateinit var buttonChannel: EventChannel
     private lateinit var dpadChannel: EventChannel
-    private lateinit var joystickLeftChannel: EventChannel
-    private lateinit var joystickRightChannel: EventChannel
-    private lateinit var triggerLeftChannel: EventChannel
-    private lateinit var triggerRightChannel: EventChannel
+    private lateinit var joystickChannel: EventChannel
+    private lateinit var triggerChannel: EventChannel
 
     private val observer = GamepadObserver()
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD)
+        buttonChannel = EventChannel(flutterPluginBinding.binaryMessenger, BUTTON)
         dpadChannel = EventChannel(flutterPluginBinding.binaryMessenger, DPAD)
-        joystickLeftChannel = EventChannel(flutterPluginBinding.binaryMessenger, JOYSTICK_LEFT)
-        joystickRightChannel = EventChannel(flutterPluginBinding.binaryMessenger, JOYSTICK_RIGHT)
-        triggerLeftChannel = EventChannel(flutterPluginBinding.binaryMessenger, TRIGGER_LEFT)
-        triggerRightChannel = EventChannel(flutterPluginBinding.binaryMessenger, TRIGGER_RIGHT)
+        joystickChannel = EventChannel(flutterPluginBinding.binaryMessenger, JOYSTICK)
+        triggerChannel = EventChannel(flutterPluginBinding.binaryMessenger, TRIGGER)
 
         channel.setMethodCallHandler(this)
-        dpadChannel.setStreamHandler(observer.gamepad.dpad)
-        joystickLeftChannel.setStreamHandler(observer.gamepad.joystickLeft)
-        joystickRightChannel.setStreamHandler(observer.gamepad.joystickRight)
-        triggerLeftChannel.setStreamHandler(observer.gamepad.triggerLeft)
-        triggerRightChannel.setStreamHandler(observer.gamepad.triggerRight)
+        buttonChannel.setStreamHandler(Handler.button)
+        dpadChannel.setStreamHandler(Handler.dpad)
+        joystickChannel.setStreamHandler(Handler.joystick)
+        triggerChannel.setStreamHandler(Handler.trigger)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
+        buttonChannel.setStreamHandler(null)
         dpadChannel.setStreamHandler(null)
-        joystickLeftChannel.setStreamHandler(null)
-        joystickRightChannel.setStreamHandler(null)
-        triggerLeftChannel.setStreamHandler(null)
-        triggerRightChannel.setStreamHandler(null)
-
-        observer.gamepad.dpad.onCancel(null)
-        observer.gamepad.joystickLeft.onCancel(null)
-        observer.gamepad.joystickRight.onCancel(null)
-        observer.gamepad.triggerLeft.onCancel(null)
-        observer.gamepad.triggerRight.onCancel(null)
+        joystickChannel.setStreamHandler(null)
+        triggerChannel.setStreamHandler(null)
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {

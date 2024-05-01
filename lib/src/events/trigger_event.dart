@@ -3,7 +3,13 @@ part of '../models/control.dart';
 typedef Trigger = void Function(TriggerEvent event);
 
 class TriggerEvent {
-  TriggerEvent(this.device, this.z);
+  TriggerEvent(
+    int hand,
+    this.device,
+    this.z,
+  ) : hand = Hand.values[hand];
+
+  final Hand hand;
 
   final int device;
 
@@ -14,46 +20,42 @@ class TriggerEvent {
 }
 
 class TriggerHandler extends MotionHandler<TriggerEvent> {
-  TriggerHandler(super._events, this._button);
+  TriggerHandler(this._button);
 
   final Button _button;
 
-  static TriggerHandler? _left;
-  static TriggerHandler? _right;
+  static int _count = 0;
+
+  static List<TriggerHandler>? _list;
+
+  static TriggerHandler map(Hand hand) {
+    _list ??= <TriggerHandler>[
+      TriggerHandler(Button.zl),
+      TriggerHandler(Button.zr),
+    ];
+    return _list![hand.index];
+  }
 
   @override
   bool assignMotionEvent(Trigger? onEvent) {
+    checkReferenceCount(onEvent) == true ? _count++ : _count--;
+
     if (super.assignMotionEvent(onEvent)) {
-      _subscription ??= _events.listen(_onEvent);
+      _subscription ??= GamepadPlatform.instance.triggerEvents.listen(
+        (event) => map(event.hand)._onEvent?.call(event),
+      );
       return true;
-    } else if (_subscription != null) {
+    }
+    if (_subscription != null && _count == 0) {
       _subscription!.cancel();
       _subscription = null;
 
-      final button = ButtonHandler._map?[_button.key];
+      final button = ButtonHandler._list?[_button.index];
 
       if (button != null) {
-        if (button._onPress != null || button._onRelease != null) {
-          return true;
-        }
+        return button.active;
       }
     }
     return false;
-  }
-
-  static TriggerHandler get left {
-    _left ??= TriggerHandler(
-      GamepadPlatform.instance.triggerLeftEvents,
-      Button.zl,
-    );
-    return _left!;
-  }
-
-  static TriggerHandler get right {
-    _right ??= TriggerHandler(
-      GamepadPlatform.instance.triggerRightEvents,
-      Button.zr,
-    );
-    return _right!;
   }
 }

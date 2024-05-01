@@ -93,8 +93,8 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         map[button] = Gamepad.instance.assignButtonListener(
           button,
-          onPress: () => onGamepadButtonPress(button),
-          onRelease: () => onGamepadButtonRelease(button),
+          onPress: (event) => onGamepadButtonPress(button),
+          onRelease: (event) => onGamepadButtonRelease(button),
         );
       }
     });

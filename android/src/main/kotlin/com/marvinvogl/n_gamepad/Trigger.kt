@@ -28,7 +28,7 @@ class Trigger(
     }
 
     private fun prepareMotionData(id: Int, buffer: ControlBuffer): Boolean {
-        sink?.success(listOf(id, z))
+        Handler.trigger.sink?.success(listOf(hand.ordinal, id, z))
 
         if (transmission) {
             buffer.bitfield += bitmask

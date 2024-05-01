@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-
 import '../../n_gamepad_platform_interface.dart';
 
 part '../events/button_event.dart';
@@ -29,76 +27,104 @@ enum Control {
 }
 
 enum Button {
-  a(LogicalKeyboardKey.gameButtonA),
-  b(LogicalKeyboardKey.gameButtonB),
-  x(LogicalKeyboardKey.gameButtonX),
-  y(LogicalKeyboardKey.gameButtonY),
-  l(LogicalKeyboardKey.gameButtonLeft1),
-  r(LogicalKeyboardKey.gameButtonRight1),
-  zl(LogicalKeyboardKey.gameButtonLeft2),
-  zr(LogicalKeyboardKey.gameButtonRight2),
-  tl(LogicalKeyboardKey.gameButtonThumbLeft),
-  tr(LogicalKeyboardKey.gameButtonThumbRight),
-  select(LogicalKeyboardKey.gameButtonSelect),
-  start(LogicalKeyboardKey.gameButtonStart),
-  up(null),
-  down(null),
-  left(null),
-  right(null);
+  a,
+  b,
+  x,
+  y,
+  l,
+  r,
+  zl,
+  zr,
+  tl,
+  tr,
+  select,
+  start,
+  up(true),
+  down(true),
+  left(true),
+  right(true);
 
-  const Button(this.key);
+  const Button([this.motion = false]);
 
-  final LogicalKeyboardKey? key;
+  final bool motion;
+}
+
+enum Hand {
+  left(Control.jl, Control.tl),
+  right(Control.jr, Control.tr);
+
+  const Hand(this.joystick, this.trigger);
+
+  final Control joystick;
+  final Control trigger;
 }
 
 abstract class KeyHandler {
   Press? _onPress;
   Release? _onRelease;
 
-  bool isPressed = false;
+  bool get active => _onPress != null || _onRelease != null;
+
+  bool? checkReferenceCount(Press? onPress, Release? onRelease) {
+    if (_onPress == null && _onRelease == null) {
+      if (onPress != null || onRelease != null) {
+        return true;
+      }
+    }
+    if (_onPress != null || _onRelease != null) {
+      if (onPress == null && onRelease == null) {
+        return false;
+      }
+    }
+    return null;
+  }
 
   bool assignKeyEvent(Press? onPress, Release? onRelease) {
     _onPress = onPress;
     _onRelease = onRelease;
 
-    return onPress != null || onRelease != null;
+    return active;
   }
 
-  bool _onKeyDown() {
-    if (!isPressed) {
-      isPressed = true;
-      if (_onPress != null) {
-        _onPress!();
-        return true;
-      }
+  bool _onKeyDown(ButtonEvent event) {
+    if (_onPress != null) {
+      _onPress!.call(event);
+      return true;
     }
     return false;
   }
 
-  bool _onKeyUp() {
-    if (isPressed) {
-      isPressed = false;
-      if (_onRelease != null) {
-        _onRelease!();
-        return true;
-      }
+  bool _onKeyUp(ButtonEvent event) {
+    if (_onRelease != null) {
+      _onRelease!.call(event);
+      return true;
     }
     return false;
   }
 }
 
 abstract class MotionHandler<T> {
-  MotionHandler(this._events);
-
-  final Stream<T> _events;
-
   StreamSubscription<T>? _subscription;
 
   void Function(T event)? _onEvent;
 
+  bool get active => _onEvent != null;
+
+  bool? checkReferenceCount(void Function(T event)? onEvent) {
+    if (_onEvent == null && onEvent != null) {
+      _onEvent = onEvent;
+      return true;
+    }
+    if (_onEvent != null && onEvent == null) {
+      _onEvent = onEvent;
+      return false;
+    }
+    return null;
+  }
+
   bool assignMotionEvent(void Function(T event)? onEvent) {
     _onEvent = onEvent;
 
-    return onEvent != null;
+    return active;
   }
 }

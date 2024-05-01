@@ -6,13 +6,18 @@ export 'src/gamepad.dart' show Gamepad;
 export 'src/gamepad_development.dart';
 
 export 'src/models/control.dart'
-    hide
-        KeyHandler,
-        MotionHandler,
-        ButtonHandler,
-        DpadHandler,
-        JoystickHandler,
-        TriggerHandler;
+    show
+        Control,
+        Press,
+        Release,
+        Button,
+        ButtonEvent,
+        Dpad,
+        DpadEvent,
+        Joystick,
+        JoystickEvent,
+        Trigger,
+        TriggerEvent;
 export 'src/models/game.dart';
 export 'src/models/layout.dart';
 export 'src/models/protocol.dart' show StatePacket, UpdatePacket;

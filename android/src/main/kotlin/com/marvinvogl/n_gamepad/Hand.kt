@@ -10,7 +10,7 @@ enum class Hand(
     val joystick: Int,
     val trigger: Int,
 ) {
-    Left(
+    LEFT(
         MotionEvent.AXIS_X,
         MotionEvent.AXIS_Y,
         MotionEvent.AXIS_LTRIGGER,
@@ -18,7 +18,7 @@ enum class Hand(
         0b00010000,
         0b01000000,
     ),
-    Right(
+    RIGHT(
         MotionEvent.AXIS_Z,
         MotionEvent.AXIS_RZ,
         MotionEvent.AXIS_RTRIGGER,

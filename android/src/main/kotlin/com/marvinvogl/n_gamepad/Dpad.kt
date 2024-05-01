@@ -9,8 +9,8 @@ class Dpad : Control(0b00001000) {
     private var x = 0
     private var y = 0
 
-    fun onEvent(keyCode: Int, event: KeyEvent): Boolean {
-        when (keyCode) {
+    fun onEvent(event: KeyEvent): Boolean {
+        when (event.keyCode) {
             KeyEvent.KEYCODE_DPAD_CENTER -> {
                 data[0] = 0
                 data[1] = 0

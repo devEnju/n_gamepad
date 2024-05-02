@@ -19,34 +19,36 @@ class ButtonEvent {
   String get _state => state ? 'pressed' : 'released';
 
   @override
-  String toString() => '[ButtonEvent (${button.name}: $_state)]';
+  String toString() => '[ButtonEvent (${button.name} - $_state)]';
 }
 
 class ButtonHandler extends KeyHandler<ButtonEvent> {
-  ButtonHandler(this._button);
+  ButtonHandler(this.button);
 
-  final Button _button;
+  final Button button;
 
-  static List<ButtonHandler>? _list;
+  static List<ButtonHandler>? list;
 
   @override
   bool assignKeyEvent(Press? onPress, Release? onRelease) {
     if (super.assignKeyEvent(onPress, onRelease)) {
-      subscription ??= GamepadPlatform.instance.buttonEvents.listen(
-        (event) => Handler.button(event.button)._onKey(event),
-      );
       return true;
     }
-    if (_button == Button.zl && Handler.trigger(Hand.left).active) {
+    if (Handler.trigger(Hand.left).isKey(button)) {
       return true;
     }
-    if (_button == Button.zr && Handler.trigger(Hand.right).active) {
+    if (Handler.trigger(Hand.right).isKey(button)) {
       return true;
     }
     return false;
   }
 
-  bool _onKey(ButtonEvent event) {
-    return event.state ? _onKeyDown(event) : _onKeyUp(event);
+  @override
+  StreamSubscription<ButtonEvent> onKey() {
+    return GamepadPlatform.instance.buttonEvents.listen((event) {
+      ButtonHandler handler = Handler.button(button);
+
+      event.state ? handler.onKeyDown(event) : handler.onKeyUp(event);
+    });
   }
 }

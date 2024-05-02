@@ -16,29 +16,37 @@ class TriggerEvent {
   final double z;
 
   @override
-  String toString() => '[TriggerEvent (z: $z)]';
+  String toString() => '[TriggerEvent (${hand.name} - z: $z)]';
 }
 
 class TriggerHandler extends MotionHandler<TriggerEvent> {
-  TriggerHandler(this._button);
+  TriggerHandler(this.hand);
 
-  final Button _button;
+  final Hand hand;
 
-  static List<TriggerHandler>? _list;
+  static List<TriggerHandler>? list;
 
   @override
   bool assignMotionEvent(Trigger? onEvent) {
     if (super.assignMotionEvent(onEvent)) {
-      subscription ??= GamepadPlatform.instance.triggerEvents.listen(
-        (event) => Handler.trigger(event.hand)._onEvent?.call(event),
-      );
       return true;
     }
-    final button = ButtonHandler._list?[_button.index];
+    final handler = ButtonHandler.list?[hand.button.index];
 
-    if (button != null) {
-      return button.active;
+    if (handler != null) {
+      return handler._onPress != null || handler._onRelease != null;
     }
     return false;
+  }
+
+  @override
+  StreamSubscription<TriggerEvent> onMotion() {
+    return GamepadPlatform.instance.triggerEvents.listen((event) {
+      Handler.trigger(hand)._onEvent?.call(event);
+    });
+  }
+
+  bool isKey(Button button) {
+    return hand.button == button && _onEvent != null;
   }
 }

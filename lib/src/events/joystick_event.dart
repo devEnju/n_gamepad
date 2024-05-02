@@ -18,20 +18,20 @@ class JoystickEvent {
   final double y;
 
   @override
-  String toString() => '[JoystickEvent (x: $x, y: $y)]';
+  String toString() => '[JoystickEvent (${hand.name} - x: $x, y: $y)]';
 }
 
 class JoystickHandler extends MotionHandler<JoystickEvent> {
-  static List<JoystickHandler>? _list;
+  JoystickHandler(this.hand);
+
+  final Hand hand;
+
+  static List<JoystickHandler>? list;
 
   @override
-  bool assignMotionEvent(Joystick? onEvent) {
-    if (super.assignMotionEvent(onEvent)) {
-      subscription ??= GamepadPlatform.instance.joystickEvents.listen(
-        (event) => Handler.joystick(event.hand)._onEvent?.call(event),
-      );
-      return true;
-    }
-    return false;
+  StreamSubscription<JoystickEvent> onMotion() {
+    return GamepadPlatform.instance.joystickEvents.listen(
+      (event) => Handler.joystick(hand)._onEvent?.call(event),
+    );
   }
 }

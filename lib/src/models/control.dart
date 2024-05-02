@@ -41,11 +41,12 @@ enum Button {
 }
 
 enum Hand {
-  left(Control.jl, Control.tl),
-  right(Control.jr, Control.tr);
+  left(Button.zl, Control.jl, Control.zl),
+  right(Button.zr, Control.jr, Control.zr);
 
-  const Hand(this.joystick, this.trigger);
+  const Hand(this.button, this.joystick, this.trigger);
 
+  final Button button;
   final Control joystick;
   final Control trigger;
 }

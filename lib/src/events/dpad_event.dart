@@ -21,17 +21,17 @@ class DpadEvent {
 class DpadHandler extends KeyHandler<DpadEvent> {
   bool state = false;
 
+  static Map<Button, DpadHandler>? map;
+
+  static void Function(DpadEvent event)? _onEvent;
+
   static StreamSubscription<DpadEvent>? _subscription;
-
-  static Dpad? _onEvent;
-
-  static Map<Button, DpadHandler>? _map;
 
   static bool assignMotionEvent(Dpad? onEvent) {
     _onEvent = onEvent;
 
     if (_onEvent != null) {
-      _subscription ??= GamepadPlatform.instance.dpadEvents.listen(_onDpad);
+      _subscription ??= onMotion();
       return true;
     }
     if (_subscription != null) {
@@ -41,60 +41,56 @@ class DpadHandler extends KeyHandler<DpadEvent> {
     return false;
   }
 
-  static void _onDpad(DpadEvent event) {
-    if (_map != null) {
-      final up = _map![Button.up]!;
-      final down = _map![Button.down]!;
-      final left = _map![Button.left]!;
-      final right = _map![Button.right]!;
+  static StreamSubscription<DpadEvent> onMotion() {
+    return GamepadPlatform.instance.dpadEvents.listen((event) {
+      if (map != null) {
+        final up = map![Button.up]!;
+        final down = map![Button.down]!;
+        final left = map![Button.left]!;
+        final right = map![Button.right]!;
 
-      if (event.x < 0) {
-        left._onKeyDown(ButtonEvent(Button.left.index, event.device, true));
-        right._onKeyUp(ButtonEvent(Button.right.index, event.device, false));
-      } else if (event.x > 0) {
-        left._onKeyUp(ButtonEvent(Button.left.index, event.device, false));
-        right._onKeyDown(ButtonEvent(Button.right.index, event.device, true));
-      } else {
-        left._onKeyUp(ButtonEvent(Button.left.index, event.device, false));
-        right._onKeyUp(ButtonEvent(Button.right.index, event.device, false));
+        if (event.x < 0) {
+          left.onKeyDown(ButtonEvent(Button.left.index, event.device, true));
+          right.onKeyUp(ButtonEvent(Button.right.index, event.device, false));
+        } else if (event.x > 0) {
+          left.onKeyUp(ButtonEvent(Button.left.index, event.device, false));
+          right.onKeyDown(ButtonEvent(Button.right.index, event.device, true));
+        } else {
+          left.onKeyUp(ButtonEvent(Button.left.index, event.device, false));
+          right.onKeyUp(ButtonEvent(Button.right.index, event.device, false));
+        }
+        if (event.y < 0) {
+          up.onKeyDown(ButtonEvent(Button.up.index, event.device, true));
+          down.onKeyUp(ButtonEvent(Button.down.index, event.device, false));
+        } else if (event.y > 0) {
+          up.onKeyUp(ButtonEvent(Button.up.index, event.device, false));
+          down.onKeyDown(ButtonEvent(Button.down.index, event.device, true));
+        } else {
+          up.onKeyUp(ButtonEvent(Button.up.index, event.device, false));
+          down.onKeyUp(ButtonEvent(Button.down.index, event.device, false));
+        }
       }
-      if (event.y < 0) {
-        up._onKeyDown(ButtonEvent(Button.up.index, event.device, true));
-        down._onKeyUp(ButtonEvent(Button.down.index, event.device, false));
-      } else if (event.y > 0) {
-        up._onKeyUp(ButtonEvent(Button.up.index, event.device, false));
-        down._onKeyDown(ButtonEvent(Button.down.index, event.device, true));
-      } else {
-        up._onKeyUp(ButtonEvent(Button.up.index, event.device, false));
-        down._onKeyUp(ButtonEvent(Button.down.index, event.device, false));
-      }
-    }
-    _onEvent?.call(event);
+      _onEvent?.call(event);
+    });
   }
 
   @override
-  bool assignKeyEvent(Press? onPress, Release? onRelease) {
-    if (super.assignKeyEvent(onPress, onRelease)) {
-      subscription ??= GamepadPlatform.instance.dpadEvents.listen(_onDpad);
-      return true;
-    }
-    return false;
-  }
+  StreamSubscription<DpadEvent> onKey() => onMotion();
 
   @override
-  bool _onKeyDown(ButtonEvent event) {
+  bool onKeyDown(ButtonEvent event) {
     if (!state) {
       state = true;
-      return super._onKeyDown(event);
+      return super.onKeyDown(event);
     }
     return false;
   }
 
   @override
-  bool _onKeyUp(ButtonEvent event) {
+  bool onKeyUp(ButtonEvent event) {
     if (state) {
       state = false;
-      return super._onKeyUp(event);
+      return super.onKeyUp(event);
     }
     return false;
   }

@@ -13,52 +13,52 @@ part '../events/trigger_event.dart';
 
 class Handler {
   static ButtonHandler button(Button button) {
-    ButtonHandler._list ??= <ButtonHandler>[
+    ButtonHandler.list ??= <ButtonHandler>[
       for (final value in Button.values)
         if (!value.motion) ButtonHandler(value),
     ];
-    return ButtonHandler._list![button.index];
+    return ButtonHandler.list![button.index];
   }
 
   static DpadHandler? dpad(Button button) {
-    DpadHandler._map ??= <Button, DpadHandler>{
+    DpadHandler.map ??= <Button, DpadHandler>{
       for (final value in Button.values)
         if (value.motion) value: DpadHandler(),
     };
-    return DpadHandler._map![button];
+    return DpadHandler.map![button];
   }
 
   static JoystickHandler joystick(Hand hand) {
-    JoystickHandler._list ??= <JoystickHandler>[
-      JoystickHandler(),
-      JoystickHandler(),
+    JoystickHandler.list ??= <JoystickHandler>[
+      JoystickHandler(Hand.left),
+      JoystickHandler(Hand.right),
     ];
-    return JoystickHandler._list![hand.index];
+    return JoystickHandler.list![hand.index];
   }
 
   static TriggerHandler trigger(Hand hand) {
-    TriggerHandler._list ??= <TriggerHandler>[
-      TriggerHandler(Button.zl),
-      TriggerHandler(Button.zr),
+    TriggerHandler.list ??= <TriggerHandler>[
+      TriggerHandler(Hand.left),
+      TriggerHandler(Hand.right),
     ];
-    return TriggerHandler._list![hand.index];
+    return TriggerHandler.list![hand.index];
   }
 }
 
 abstract class KeyHandler<T> {
+  void Function(ButtonEvent event)? _onPress;
+  void Function(ButtonEvent event)? _onRelease;
+
   StreamSubscription<T>? subscription;
-
-  Press? _onPress;
-  Release? _onRelease;
-
-  bool get active => _onPress != null || _onRelease != null;
 
   bool assignKeyEvent(Press? onPress, Release? onRelease) {
     _onPress = onPress;
     _onRelease = onRelease;
 
-    if (active) return true;
-
+    if (_onPress != null || _onRelease != null) {
+      subscription ??= onKey();
+      return true;
+    }
     if (subscription != null) {
       subscription!.cancel();
       subscription = null;
@@ -66,7 +66,9 @@ abstract class KeyHandler<T> {
     return false;
   }
 
-  bool _onKeyDown(ButtonEvent event) {
+  StreamSubscription<T> onKey();
+
+  bool onKeyDown(ButtonEvent event) {
     if (_onPress != null) {
       _onPress!.call(event);
       return true;
@@ -74,7 +76,7 @@ abstract class KeyHandler<T> {
     return false;
   }
 
-  bool _onKeyUp(ButtonEvent event) {
+  bool onKeyUp(ButtonEvent event) {
     if (_onRelease != null) {
       _onRelease!.call(event);
       return true;
@@ -84,21 +86,23 @@ abstract class KeyHandler<T> {
 }
 
 abstract class MotionHandler<T> {
-  StreamSubscription<T>? subscription;
-
   void Function(T event)? _onEvent;
 
-  bool get active => _onEvent != null;
+  StreamSubscription<T>? subscription;
 
   bool assignMotionEvent(void Function(T event)? onEvent) {
     _onEvent = onEvent;
 
-    if (active) return true;
-
+    if (_onEvent != null) {
+      subscription ??= onMotion();
+      return true;
+    }
     if (subscription != null) {
       subscription!.cancel();
       subscription = null;
     }
     return false;
   }
+
+  StreamSubscription<T> onMotion();
 }

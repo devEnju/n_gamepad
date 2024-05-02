@@ -35,9 +35,9 @@ Access the `Gamepad.instance` and assign handlers to a specific `Button`, the dp
 
 ```dart
 // Sets onPress and onRelease handler for the A button
-Gamepad.instance.assignButtonListener(Button.a, onPress: () {}, onRelease: () {});
+Gamepad.instance.assignButtonListener(Button.a, onPress: (event) {}, onRelease: (event) {});
 // Resets onPress and sets onRelease handler for the B button
-Gamepad.instance.assignButtonListener(Button.b, onRelease: () {});
+Gamepad.instance.assignButtonListener(Button.b, onRelease: (event) {});
 // Sets onEvent handler for the right joystick
 Gamepad.instance.assignJoystickListener(Hand.right, onEvent: (event) {});
 // Resets onPress and onRelease handler of B button

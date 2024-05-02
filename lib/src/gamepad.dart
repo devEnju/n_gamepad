@@ -3,6 +3,7 @@ import 'dart:async';
 import '../n_gamepad_platform_interface.dart';
 
 import 'models/control.dart';
+import 'models/handler.dart';
 
 /// A class for managing gamepad inputs in a Flutter application.
 ///
@@ -33,10 +34,10 @@ class Gamepad {
     Press? onPress,
     Release? onRelease,
   }) {
-    final handler =
-        button.motion ? DpadHandler.map(button)! : ButtonHandler.map(button);
-
-    return handler.assignKeyEvent(onPress, onRelease);
+    if (button.motion) {
+      return Handler.dpad(button)!.assignKeyEvent(onPress, onRelease);
+    }
+    return Handler.button(button).assignKeyEvent(onPress, onRelease);
   }
 
   /// Assigns an event listener to the gamepad's dpad.
@@ -61,7 +62,7 @@ class Gamepad {
   /// set to `null`. In order to reset the [Joystick] event listener,
   /// [assignJoystickListener] needs to be called only specifying a [hand].
   bool assignJoystickListener(Hand hand, {Joystick? onEvent}) {
-    return JoystickHandler.map(hand).assignMotionEvent(onEvent);
+    return Handler.joystick(hand).assignMotionEvent(onEvent);
   }
 
   /// Assigns an event listener to a gamepad's trigger.
@@ -75,7 +76,7 @@ class Gamepad {
   /// is also set to `null`. In order to reset the [Trigger] event listener,
   /// [assignTriggerListener] needs to be called only specifying a [hand].
   bool assignTriggerListener(Hand hand, {Trigger? onEvent}) {
-    return TriggerHandler.map(hand).assignMotionEvent(onEvent);
+    return Handler.trigger(hand).assignMotionEvent(onEvent);
   }
 
   /// Resets all control listeners to their default state.

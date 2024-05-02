@@ -1,4 +1,4 @@
-part of '../models/control.dart';
+part of '../models/handler.dart';
 
 typedef Dpad = void Function(DpadEvent event);
 
@@ -18,10 +18,8 @@ class DpadEvent {
   String toString() => '[DpadEvent (x: $x, y: $y)]';
 }
 
-class DpadHandler extends KeyHandler {
+class DpadHandler extends KeyHandler<DpadEvent> {
   bool state = false;
-
-  static int _count = 0;
 
   static StreamSubscription<DpadEvent>? _subscription;
 
@@ -29,25 +27,14 @@ class DpadHandler extends KeyHandler {
 
   static Map<Button, DpadHandler>? _map;
 
-  static DpadHandler? map(Button button) {
-    _map ??= <Button, DpadHandler>{
-      for (final value in Button.values)
-        if (value.motion) value: DpadHandler(),
-    };
-    return _map![button];
-  }
-
   static bool assignMotionEvent(Dpad? onEvent) {
-    if (_onEvent == null && onEvent != null) _count++;
-    if (_onEvent != null && onEvent == null) _count--;
-
     _onEvent = onEvent;
 
     if (_onEvent != null) {
       _subscription ??= GamepadPlatform.instance.dpadEvents.listen(_onDpad);
       return true;
     }
-    if (_subscription != null && _count == 0) {
+    if (_subscription != null) {
       _subscription!.cancel();
       _subscription = null;
     }
@@ -87,15 +74,9 @@ class DpadHandler extends KeyHandler {
 
   @override
   bool assignKeyEvent(Press? onPress, Release? onRelease) {
-    checkReferenceCount(onPress, onRelease) == true ? _count++ : _count--;
-
     if (super.assignKeyEvent(onPress, onRelease)) {
-      _subscription ??= GamepadPlatform.instance.dpadEvents.listen(_onDpad);
+      subscription ??= GamepadPlatform.instance.dpadEvents.listen(_onDpad);
       return true;
-    }
-    if (_subscription != null && _count == 0) {
-      _subscription!.cancel();
-      _subscription = null;
     }
     return false;
   }

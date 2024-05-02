@@ -1,4 +1,4 @@
-part of '../models/control.dart';
+part of '../models/handler.dart';
 
 typedef Press = void Function(ButtonEvent event);
 typedef Release = void Function(ButtonEvent event);
@@ -22,43 +22,25 @@ class ButtonEvent {
   String toString() => '[ButtonEvent (${button.name}: $_state)]';
 }
 
-class ButtonHandler extends KeyHandler {
+class ButtonHandler extends KeyHandler<ButtonEvent> {
   ButtonHandler(this._button);
 
   final Button _button;
 
-  static int _count = 0;
-
-  static StreamSubscription<ButtonEvent>? _subscription;
-
   static List<ButtonHandler>? _list;
-
-  static ButtonHandler map(Button button) {
-    _list ??= <ButtonHandler>[
-      for (final value in Button.values)
-        if (!value.motion) ButtonHandler(value),
-    ];
-    return _list![button.index];
-  }
 
   @override
   bool assignKeyEvent(Press? onPress, Release? onRelease) {
-    checkReferenceCount(onPress, onRelease) == true ? _count++ : _count--;
-
     if (super.assignKeyEvent(onPress, onRelease)) {
-      _subscription ??= GamepadPlatform.instance.buttonEvents.listen(
-        (event) => map(event.button)._onKey(event),
+      subscription ??= GamepadPlatform.instance.buttonEvents.listen(
+        (event) => Handler.button(event.button)._onKey(event),
       );
       return true;
     }
-    if (_subscription != null && _count == 0) {
-      _subscription!.cancel();
-      _subscription = null;
-    }
-    if (_button == Button.zl && TriggerHandler.map(Hand.left).active) {
+    if (_button == Button.zl && Handler.trigger(Hand.left).active) {
       return true;
     }
-    if (_button == Button.zr && TriggerHandler.map(Hand.right).active) {
+    if (_button == Button.zr && Handler.trigger(Hand.right).active) {
       return true;
     }
     return false;

@@ -5,12 +5,12 @@ export 'src/connection.dart';
 export 'src/gamepad.dart' show Gamepad;
 export 'src/gamepad_development.dart';
 
-export 'src/models/control.dart'
+export 'src/models/control.dart' show Button, Control, Hand;
+export 'src/models/game.dart';
+export 'src/models/handler.dart'
     show
-        Control,
         Press,
         Release,
-        Button,
         ButtonEvent,
         Dpad,
         DpadEvent,
@@ -18,7 +18,6 @@ export 'src/models/control.dart'
         JoystickEvent,
         Trigger,
         TriggerEvent;
-export 'src/models/game.dart';
 export 'src/models/layout.dart';
 export 'src/models/protocol.dart' show StatePacket, UpdatePacket;
 

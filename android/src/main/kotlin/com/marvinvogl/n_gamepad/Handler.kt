@@ -11,14 +11,22 @@ class Handler : StreamHandler {
         val trigger = Handler()
     }
 
+    private var count = 0
+
     var sink: EventSink? = null
         private set
 
     override fun onListen(arguments: Any?, events: EventSink?) {
+        count++
+
         sink = events
     }
 
     override fun onCancel(arguments: Any?) {
-        sink = null
+        count--
+
+        if (count == 0) {
+            sink = null
+        }
     }
 }

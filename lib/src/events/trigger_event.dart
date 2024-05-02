@@ -1,4 +1,4 @@
-part of '../models/control.dart';
+part of '../models/handler.dart';
 
 typedef Trigger = void Function(TriggerEvent event);
 
@@ -24,37 +24,20 @@ class TriggerHandler extends MotionHandler<TriggerEvent> {
 
   final Button _button;
 
-  static int _count = 0;
-
   static List<TriggerHandler>? _list;
-
-  static TriggerHandler map(Hand hand) {
-    _list ??= <TriggerHandler>[
-      TriggerHandler(Button.zl),
-      TriggerHandler(Button.zr),
-    ];
-    return _list![hand.index];
-  }
 
   @override
   bool assignMotionEvent(Trigger? onEvent) {
-    checkReferenceCount(onEvent) == true ? _count++ : _count--;
-
     if (super.assignMotionEvent(onEvent)) {
-      _subscription ??= GamepadPlatform.instance.triggerEvents.listen(
-        (event) => map(event.hand)._onEvent?.call(event),
+      subscription ??= GamepadPlatform.instance.triggerEvents.listen(
+        (event) => Handler.trigger(event.hand)._onEvent?.call(event),
       );
       return true;
     }
-    if (_subscription != null && _count == 0) {
-      _subscription!.cancel();
-      _subscription = null;
+    final button = ButtonHandler._list?[_button.index];
 
-      final button = ButtonHandler._list?[_button.index];
-
-      if (button != null) {
-        return button.active;
-      }
+    if (button != null) {
+      return button.active;
     }
     return false;
   }

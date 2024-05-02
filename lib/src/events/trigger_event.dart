@@ -42,7 +42,7 @@ class TriggerHandler extends MotionHandler<TriggerEvent> {
   @override
   StreamSubscription<TriggerEvent> onMotion() {
     return GamepadPlatform.instance.triggerEvents.listen((event) {
-      Handler.trigger(hand)._onEvent?.call(event);
+      Handler.trigger(event.hand)._onEvent?.call(event);
     });
   }
 

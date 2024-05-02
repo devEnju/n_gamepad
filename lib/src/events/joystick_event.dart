@@ -31,7 +31,7 @@ class JoystickHandler extends MotionHandler<JoystickEvent> {
   @override
   StreamSubscription<JoystickEvent> onMotion() {
     return GamepadPlatform.instance.joystickEvents.listen(
-      (event) => Handler.joystick(hand)._onEvent?.call(event),
+      (event) => Handler.joystick(event.hand)._onEvent?.call(event),
     );
   }
 }

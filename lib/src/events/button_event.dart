@@ -8,7 +8,7 @@ class ButtonEvent {
     int button,
     this.device,
     this.state,
-  ) : button = Button.values[button];
+  ) : button = key[button]!;
 
   final Button button;
 
@@ -46,7 +46,7 @@ class ButtonHandler extends KeyHandler<ButtonEvent> {
   @override
   StreamSubscription<ButtonEvent> onKey() {
     return GamepadPlatform.instance.buttonEvents.listen((event) {
-      ButtonHandler handler = Handler.button(button);
+      ButtonHandler handler = Handler.button(event.button);
 
       event.state ? handler.onKeyDown(event) : handler.onKeyUp(event);
     });

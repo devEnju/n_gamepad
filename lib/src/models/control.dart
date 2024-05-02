@@ -50,3 +50,22 @@ enum Hand {
   final Control joystick;
   final Control trigger;
 }
+
+final key = {
+  'a'.codeUnits.first: Button.a,
+  'b'.codeUnits.first: Button.b,
+  'x'.codeUnits.first: Button.x,
+  'y'.codeUnits.first: Button.y,
+  'l'.codeUnits.first: Button.l,
+  'r'.codeUnits.first: Button.r,
+  'u'.codeUnits.first: Button.zl,
+  'v'.codeUnits.first: Button.zr,
+  't'.codeUnits.first: Button.tl,
+  'z'.codeUnits.first: Button.tr,
+  'c'.codeUnits.first: Button.select,
+  's'.codeUnits.first: Button.start,
+  Button.up.index: Button.up,
+  Button.down.index: Button.down,
+  Button.left.index: Button.left,
+  Button.right.index: Button.right,
+};

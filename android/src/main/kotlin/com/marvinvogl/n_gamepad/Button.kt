@@ -26,7 +26,7 @@ class Button(
     }
 
     private fun prepareKeyDownData(id: Int, buffer: ControlBuffer): Boolean {
-        Handler.button.sink?.success(listOf(data, id, state))
+        Handler.button.sink?.success(listOf(data.code, id, state))
 
         if (transmission) {
             buffer.bitfield = bitmask
@@ -38,7 +38,7 @@ class Button(
     }
 
     private fun prepareKeyUpData(id: Int, buffer: ControlBuffer): Boolean {
-        Handler.button.sink?.success(listOf(data, id, state))
+        Handler.button.sink?.success(listOf(data.code, id, state))
 
         if (transmission) {
             buffer.bitfield = bitmask

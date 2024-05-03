@@ -4,11 +4,11 @@ typedef Joystick = void Function(JoystickEvent event);
 
 class JoystickEvent {
   JoystickEvent(
-    int hand,
+    int index,
     this.device,
     this.x,
     this.y,
-  ) : hand = Hand.values[hand];
+  ) : hand = Hand.values[index];
 
   final Hand hand;
 
@@ -31,7 +31,7 @@ class JoystickHandler extends MotionHandler<JoystickEvent> {
   @override
   StreamSubscription<JoystickEvent> onMotion() {
     return GamepadPlatform.instance.joystickEvents.listen(
-      (event) => Handler.joystick(event.hand)._onEvent?.call(event),
+      (event) => Handler.joystick(event.hand)._onUse?.call(event),
     );
   }
 }

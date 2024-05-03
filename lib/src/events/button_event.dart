@@ -5,10 +5,10 @@ typedef Release = void Function(ButtonEvent event);
 
 class ButtonEvent {
   ButtonEvent(
-    int button,
+    int index,
     this.device,
     this.state,
-  ) : button = key[button]!;
+  ) : button = Button.values[index];
 
   final Button button;
 

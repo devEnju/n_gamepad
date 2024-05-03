@@ -42,41 +42,41 @@ class Gamepad {
 
   /// Assigns an event listener to the gamepad's dpad.
   ///
-  /// [onEvent] is an optional callback for [DpadEvent]s.
+  /// [onUse] is an optional callback for [DpadEvent]s.
   ///
   /// Returns `true` if a listener is assigned, even if there is an active
   /// listener previously assigned with the [assignButtonListener] method,
   /// `false` if all those possible listeners of a [DpadHandler] are set to
   /// `null`. In order to reset the [Dpad] event listener, [assignDpadListener]
   /// needs to be called without specifying anything.
-  bool assignDpadListener({Dpad? onEvent}) {
-    return DpadHandler.assignMotionEvent(onEvent);
+  bool assignDpadListener({Dpad? onUse}) {
+    return DpadHandler.assignMotionEvent(onUse);
   }
 
   /// Assigns an event listener to a gamepad's joystick.
   ///
   /// [hand] is the joystick to which the listener will be assigned.
-  /// [onEvent] is an optional callback for [JoystickEvent]s.
+  /// [onUse] is an optional callback for [JoystickEvent]s.
   ///
   /// Returns `true` if the listener is assigned, `false` if the listener was
   /// set to `null`. In order to reset the [Joystick] event listener,
   /// [assignJoystickListener] needs to be called only specifying a [hand].
-  bool assignJoystickListener(Hand hand, {Joystick? onEvent}) {
-    return Handler.joystick(hand).assignMotionEvent(onEvent);
+  bool assignJoystickListener(Hand hand, {Joystick? onUse}) {
+    return Handler.joystick(hand).assignMotionEvent(onUse);
   }
 
   /// Assigns an event listener to a gamepad's trigger.
   ///
   /// [hand] is the trigger to which the listener will be assigned.
-  /// [onEvent] is an optional callback for [TriggerEvent]s.
+  /// [onUse] is an optional callback for [TriggerEvent]s.
   ///
   /// Returns `true` if the listener is assigned, even if there is an active
   /// listener previously assigned with the [assignButtonListener] method,
   /// `false` if the other possible listener for the trigger in [TriggerHandler]
   /// is also set to `null`. In order to reset the [Trigger] event listener,
   /// [assignTriggerListener] needs to be called only specifying a [hand].
-  bool assignTriggerListener(Hand hand, {Trigger? onEvent}) {
-    return Handler.trigger(hand).assignMotionEvent(onEvent);
+  bool assignTriggerListener(Hand hand, {Trigger? onUse}) {
+    return Handler.trigger(hand).assignMotionEvent(onUse);
   }
 
   /// Resets all control listeners to their default state.
@@ -182,7 +182,7 @@ class NetworkGamepad extends Gamepad {
 
   /// Assigns a listener safely to the dpad.
   ///
-  /// [onEvent] is an optional callback for [DpadEvent]s.
+  /// [onUse] is an optional callback for [DpadEvent]s.
   ///
   /// Automatically blocks transmission for the dpad before assigning the
   /// listener. If the listener is reset by calling [assignDpadListenerSafely]
@@ -192,11 +192,11 @@ class NetworkGamepad extends Gamepad {
   ///
   /// Returns null if the control could not be resumed because there are still
   /// listeners assigned to it.
-  Future<bool?> assignDpadListenerSafely({Dpad? onEvent}) async {
-    if (onEvent != null) {
+  Future<bool?> assignDpadListenerSafely({Dpad? onUse}) async {
+    if (onUse != null) {
       await GamepadPlatform.instance.blockControl(Control.dpad);
     }
-    if (!assignDpadListener(onEvent: onEvent)) {
+    if (!assignDpadListener(onUse: onUse)) {
       return await GamepadPlatform.instance.resumeControl(Control.dpad);
     }
     return null;
@@ -205,7 +205,7 @@ class NetworkGamepad extends Gamepad {
   /// Assigns a listener safely to a joystick.
   ///
   /// [hand] is the joystick to which the listener will be assigned.
-  /// [onEvent] is an optional callback for [JoystickEvent]s.
+  /// [onUse] is an optional callback for [JoystickEvent]s.
   ///
   /// Automatically blocks transmission for the joystick before assigning the
   /// listener. If the listener is reset by calling
@@ -217,12 +217,12 @@ class NetworkGamepad extends Gamepad {
   /// listeners assigned to it.
   Future<bool?> assignJoystickListenerSafely(
     Hand hand, {
-    Joystick? onEvent,
+    Joystick? onUse,
   }) async {
-    if (onEvent != null) {
+    if (onUse != null) {
       await GamepadPlatform.instance.blockControl(hand.joystick);
     }
-    if (!assignJoystickListener(hand, onEvent: onEvent)) {
+    if (!assignJoystickListener(hand, onUse: onUse)) {
       return await GamepadPlatform.instance.resumeControl(hand.joystick);
     }
     return null;
@@ -231,7 +231,7 @@ class NetworkGamepad extends Gamepad {
   /// Assigns a listener safely to a trigger.
   ///
   /// [hand] is the trigger to which the listener will be assigned.
-  /// [onEvent] is an optional callback for [TriggerEvent]s.
+  /// [onUse] is an optional callback for [TriggerEvent]s.
   ///
   /// Automatically blocks transmission for the trigger before assigning the
   /// listener. If the listener is reset by calling
@@ -243,12 +243,12 @@ class NetworkGamepad extends Gamepad {
   /// listeners assigned to it.
   Future<bool?> assignTriggerListenerSafely(
     Hand hand, {
-    Trigger? onEvent,
+    Trigger? onUse,
   }) async {
-    if (onEvent != null) {
+    if (onUse != null) {
       await GamepadPlatform.instance.blockControl(hand.trigger);
     }
-    if (!assignTriggerListener(hand, onEvent: onEvent)) {
+    if (!assignTriggerListener(hand, onUse: onUse)) {
       return await GamepadPlatform.instance.resumeControl(hand.trigger);
     }
     return null;

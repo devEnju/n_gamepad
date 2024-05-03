@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         map[Control.dpad] = Gamepad.instance.assignDpadListener();
       } else {
         map[Control.dpad] = Gamepad.instance.assignDpadListener(
-          onEvent: onGamepadDpadEvent,
+          onUse: onGamepadDpadEvent,
         );
       }
     });

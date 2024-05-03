@@ -38,8 +38,8 @@ Access the `Gamepad.instance` and assign handlers to a specific `Button`, the dp
 Gamepad.instance.assignButtonListener(Button.a, onPress: (event) {}, onRelease: (event) {});
 // Resets onPress and sets onRelease handler for the B button
 Gamepad.instance.assignButtonListener(Button.b, onRelease: (event) {});
-// Sets onEvent handler for the right joystick
-Gamepad.instance.assignJoystickListener(Hand.right, onEvent: (event) {});
+// Sets onUse handler for the right joystick
+Gamepad.instance.assignJoystickListener(Hand.right, onUse: (event) {});
 // Resets onPress and onRelease handler of B button
 Gamepad.instance.assignButtonListener(Button.b);
 // Resets handlers for all input controls

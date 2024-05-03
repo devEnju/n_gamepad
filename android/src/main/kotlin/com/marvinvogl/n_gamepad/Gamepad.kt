@@ -6,18 +6,18 @@ class Gamepad {
     val gyroscope = Gyroscope()
 
     val button = mapOf(
-        KeyEvent.KEYCODE_BUTTON_A to Button('a'),
-        KeyEvent.KEYCODE_BUTTON_B to Button('b'),
-        KeyEvent.KEYCODE_BUTTON_X to Button('x'),
-        KeyEvent.KEYCODE_BUTTON_Y to Button('y'),
-        KeyEvent.KEYCODE_BUTTON_L1 to Button('l'),
-        KeyEvent.KEYCODE_BUTTON_R1 to Button('r'),
-        KeyEvent.KEYCODE_BUTTON_L2 to Button('u'),
-        KeyEvent.KEYCODE_BUTTON_R2 to Button('v'),
-        KeyEvent.KEYCODE_BUTTON_THUMBL to Button('t'),
-        KeyEvent.KEYCODE_BUTTON_THUMBR to Button('z'),
-        KeyEvent.KEYCODE_BUTTON_SELECT to Button('c'),
-        KeyEvent.KEYCODE_BUTTON_START to Button('s'),
+        KeyEvent.KEYCODE_BUTTON_A to Button('a', 0),
+        KeyEvent.KEYCODE_BUTTON_B to Button('b', 1),
+        KeyEvent.KEYCODE_BUTTON_X to Button('x', 2),
+        KeyEvent.KEYCODE_BUTTON_Y to Button('y', 3),
+        KeyEvent.KEYCODE_BUTTON_L1 to Button('l', 4),
+        KeyEvent.KEYCODE_BUTTON_R1 to Button('r', 5),
+        KeyEvent.KEYCODE_BUTTON_L2 to Button('u', 6),
+        KeyEvent.KEYCODE_BUTTON_R2 to Button('v', 7),
+        KeyEvent.KEYCODE_BUTTON_THUMBL to Button('t', 8),
+        KeyEvent.KEYCODE_BUTTON_THUMBR to Button('z', 9),
+        KeyEvent.KEYCODE_BUTTON_SELECT to Button('c', 10),
+        KeyEvent.KEYCODE_BUTTON_START to Button('s', 11),
     )
 
     val dpad = Dpad()

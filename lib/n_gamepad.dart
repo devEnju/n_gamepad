@@ -5,7 +5,7 @@ export 'src/connection.dart';
 export 'src/gamepad.dart' show Gamepad;
 export 'src/gamepad_development.dart';
 
-export 'src/models/control.dart' show Button, Control, Hand;
+export 'src/models/control.dart' show Control, Button, Hand;
 export 'src/models/game.dart';
 export 'src/models/handler.dart'
     show

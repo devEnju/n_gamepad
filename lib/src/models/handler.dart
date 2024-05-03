@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:n_gamepad/n_gamepad.dart';
-
 import '../../n_gamepad_platform_interface.dart';
 
 import 'control.dart';
@@ -86,14 +84,14 @@ abstract class KeyHandler<T> {
 }
 
 abstract class MotionHandler<T> {
-  void Function(T event)? _onEvent;
+  void Function(T event)? _onUse;
 
   StreamSubscription<T>? subscription;
 
-  bool assignMotionEvent(void Function(T event)? onEvent) {
-    _onEvent = onEvent;
+  bool assignMotionEvent(void Function(T event)? onUse) {
+    _onUse = onUse;
 
-    if (_onEvent != null) {
+    if (_onUse != null) {
       subscription ??= onMotion();
       return true;
     }

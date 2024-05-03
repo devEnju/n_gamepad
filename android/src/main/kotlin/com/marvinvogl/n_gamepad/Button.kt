@@ -4,6 +4,7 @@ import android.view.KeyEvent
 
 class Button(
     private val data: Char,
+    private val key: Int,
 ) : Control(0b00000100) {
     private var state = false
 
@@ -26,7 +27,7 @@ class Button(
     }
 
     private fun prepareKeyDownData(id: Int, buffer: ControlBuffer): Boolean {
-        Handler.button.sink?.success(listOf(data.code, id, state))
+        Handler.button.sink?.success(listOf(key, id, state))
 
         if (transmission) {
             buffer.bitfield = bitmask
@@ -38,7 +39,7 @@ class Button(
     }
 
     private fun prepareKeyUpData(id: Int, buffer: ControlBuffer): Boolean {
-        Handler.button.sink?.success(listOf(data.code, id, state))
+        Handler.button.sink?.success(listOf(key, id, state))
 
         if (transmission) {
             buffer.bitfield = bitmask

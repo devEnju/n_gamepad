@@ -27,8 +27,8 @@ class TriggerHandler extends MotionHandler<TriggerEvent> {
   static List<TriggerHandler>? list;
 
   @override
-  bool assignMotionEvent(Trigger? onEvent) {
-    if (super.assignMotionEvent(onEvent)) {
+  bool assignMotionEvent(Trigger? onUse) {
+    if (super.assignMotionEvent(onUse)) {
       return true;
     }
     final handler = ButtonHandler.list?[hand.button.index];
@@ -42,11 +42,11 @@ class TriggerHandler extends MotionHandler<TriggerEvent> {
   @override
   StreamSubscription<TriggerEvent> onMotion() {
     return GamepadPlatform.instance.triggerEvents.listen((event) {
-      Handler.trigger(event.hand)._onEvent?.call(event);
+      Handler.trigger(event.hand)._onUse?.call(event);
     });
   }
 
   bool isKey(Button button) {
-    return hand.button == button && _onEvent != null;
+    return hand.button == button && _onUse != null;
   }
 }

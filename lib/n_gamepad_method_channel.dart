@@ -114,7 +114,7 @@ class MethodChannelGamepad extends GamepadPlatform {
   Stream<DpadEvent> get dpadEvents {
     _dpadEvents ??= dpadChannel
         .receiveBroadcastStream()
-        .map((event) => DpadEvent(event[0], event[1], event[2]));
+        .map((list) => DpadEvent(list[0], list[1], list[2]));
     return _dpadEvents!;
   }
 
@@ -123,7 +123,7 @@ class MethodChannelGamepad extends GamepadPlatform {
   Stream<ButtonEvent> get buttonEvents {
     _buttonEvents ??= buttonChannel
         .receiveBroadcastStream()
-        .map((event) => ButtonEvent(event[0], event[1], event[2]));
+        .map((list) => ButtonEvent(list[0], list[1], list[2]));
     return _buttonEvents!;
   }
 
@@ -132,7 +132,7 @@ class MethodChannelGamepad extends GamepadPlatform {
   Stream<JoystickEvent> get joystickEvents {
     _joystickEvents ??= joystickChannel
         .receiveBroadcastStream()
-        .map((event) => JoystickEvent(event[0], event[1], event[2], event[3]));
+        .map((list) => JoystickEvent(list[0], list[1], list[2], list[3]));
     return _joystickEvents!;
   }
 
@@ -141,7 +141,7 @@ class MethodChannelGamepad extends GamepadPlatform {
   Stream<TriggerEvent> get triggerEvents {
     _triggerEvents ??= triggerChannel
         .receiveBroadcastStream()
-        .map((event) => TriggerEvent(event[0], event[1], event[1]));
+        .map((list) => TriggerEvent(list[0], list[1], list[2]));
     return _triggerEvents!;
   }
 }

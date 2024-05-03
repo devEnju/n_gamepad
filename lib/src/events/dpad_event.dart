@@ -23,14 +23,14 @@ class DpadHandler extends KeyHandler<DpadEvent> {
 
   static Map<Button, DpadHandler>? map;
 
-  static void Function(DpadEvent event)? _onEvent;
+  static void Function(DpadEvent event)? _onUse;
 
   static StreamSubscription<DpadEvent>? _subscription;
 
-  static bool assignMotionEvent(Dpad? onEvent) {
-    _onEvent = onEvent;
+  static bool assignMotionEvent(Dpad? onUse) {
+    _onUse = onUse;
 
-    if (_onEvent != null) {
+    if (_onUse != null) {
       _subscription ??= onMotion();
       return true;
     }
@@ -70,7 +70,7 @@ class DpadHandler extends KeyHandler<DpadEvent> {
           down.onKeyUp(ButtonEvent(Button.down.index, event.device, false));
         }
       }
-      _onEvent?.call(event);
+      _onUse?.call(event);
     });
   }
 

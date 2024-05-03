@@ -4,19 +4,19 @@ typedef Trigger = void Function(TriggerEvent event);
 
 class TriggerEvent {
   TriggerEvent(
-    int hand,
+    int index,
     this.device,
     this.z,
-  ) : hand = Hand.values[hand];
+  ) : hand = Hand.values[index];
 
   final Hand hand;
-
   final int device;
-
   final double z;
 
+  String get _z => z.toStringAsFixed(5);
+
   @override
-  String toString() => '[TriggerEvent (${hand.name} - z: $z)]';
+  String toString() => '[TriggerEvent (${hand.name} - z: $_z)]';
 }
 
 class TriggerHandler extends MotionHandler<TriggerEvent> {

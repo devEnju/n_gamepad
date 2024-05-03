@@ -10,7 +10,6 @@ class DpadEvent {
   );
 
   final int device;
-
   final int x;
   final int y;
 

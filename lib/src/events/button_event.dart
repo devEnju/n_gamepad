@@ -11,9 +11,7 @@ class ButtonEvent {
   ) : button = Button.values[index];
 
   final Button button;
-
   final int device;
-
   final bool state;
 
   String get _state => state ? 'pressed' : 'released';

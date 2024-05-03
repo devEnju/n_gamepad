@@ -11,14 +11,15 @@ class JoystickEvent {
   ) : hand = Hand.values[index];
 
   final Hand hand;
-
   final int device;
-
   final double x;
   final double y;
 
+  String get _x => x.toStringAsFixed(5);
+  String get _y => y.toStringAsFixed(5);
+
   @override
-  String toString() => '[JoystickEvent (${hand.name} - x: $x, y: $y)]';
+  String toString() => '[JoystickEvent (${hand.name} - x: $_x, y: $_y)]';
 }
 
 class JoystickHandler extends MotionHandler<JoystickEvent> {

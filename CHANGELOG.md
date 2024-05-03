@@ -1,3 +1,11 @@
+## 0.0.5
+
+* Inputs from multiple controllers are now possible
+* Altered event channels to distinguish devices
+* Created new event channel for button inputs
+* Refactored event handler implementations
+* Changed public interface to accomodate improvements
+
 ## 0.0.4
 
 * Refactored some game parameters into a layout class

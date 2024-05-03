@@ -1,57 +1,52 @@
-part of '../models/control.dart';
+part of '../models/handler.dart';
 
 typedef Trigger = void Function(TriggerEvent event);
 
 class TriggerEvent {
-  TriggerEvent(List<double> list) : z = list[0];
+  TriggerEvent(
+    int index,
+    this.device,
+    this.z,
+  ) : hand = Hand.values[index];
 
+  final Hand hand;
+  final int device;
   final double z;
 
+  String get _z => z.toStringAsFixed(5);
+
   @override
-  String toString() => '[TriggerEvent (z: $z)]';
+  String toString() => '[TriggerEvent (${hand.name} - z: $_z)]';
 }
 
 class TriggerHandler extends MotionHandler<TriggerEvent> {
-  TriggerHandler(super._events, this._button);
+  TriggerHandler(this.hand);
 
-  final Button _button;
+  final Hand hand;
 
-  static TriggerHandler? _left;
-  static TriggerHandler? _right;
+  static List<TriggerHandler>? list;
 
   @override
-  bool assignMotionEvent(Trigger? onEvent) {
-    if (super.assignMotionEvent(onEvent)) {
-      _subscription ??= _events.listen(_onEvent);
+  bool assignMotionEvent(Trigger? onUse) {
+    if (super.assignMotionEvent(onUse)) {
       return true;
-    } else if (_subscription != null) {
-      _subscription!.cancel();
-      _subscription = null;
+    }
+    final handler = ButtonHandler.list?[hand.button.index];
 
-      final button = ButtonHandler._map?[_button.key];
-
-      if (button != null) {
-        if (button._onPress != null || button._onRelease != null) {
-          return true;
-        }
-      }
+    if (handler != null) {
+      return handler._onPress != null || handler._onRelease != null;
     }
     return false;
   }
 
-  static TriggerHandler get left {
-    _left ??= TriggerHandler(
-      GamepadPlatform.instance.triggerLeftEvents,
-      Button.zl,
-    );
-    return _left!;
+  @override
+  StreamSubscription<TriggerEvent> onMotion() {
+    return GamepadPlatform.instance.triggerEvents.listen((event) {
+      Handler.trigger(event.hand)._onUse?.call(event);
+    });
   }
 
-  static TriggerHandler get right {
-    _right ??= TriggerHandler(
-      GamepadPlatform.instance.triggerRightEvents,
-      Button.zr,
-    );
-    return _right!;
+  bool isKey(Button button) {
+    return hand.button == button && _onUse != null;
   }
 }

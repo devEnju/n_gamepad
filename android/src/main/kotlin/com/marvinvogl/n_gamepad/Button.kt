@@ -4,28 +4,31 @@ import android.view.KeyEvent
 
 class Button(
     private val data: Char,
+    private val key: Int,
 ) : Control(0b00000100) {
-    private var isPressed = false
+    private var state = false
 
     fun onEvent(event: KeyEvent): Boolean {
         if (event.action == KeyEvent.ACTION_DOWN) {
-            if (!isPressed) {
-                isPressed = true
+            if (!state) {
+                state = true
 
-                return prepareKeyDownData(KeyListener.buffer)
+                return prepareKeyDownData(event.deviceId, KeyListener.buffer)
             }
         }
         if (event.action == KeyEvent.ACTION_UP) {
-            if (isPressed) {
-                isPressed = false
+            if (state) {
+                state = false
 
-                return prepareKeyUpData(KeyListener.buffer)
+                return prepareKeyUpData(event.deviceId, KeyListener.buffer)
             }
         }
         return false
     }
 
-    private fun prepareKeyDownData(buffer: ControlBuffer): Boolean {
+    private fun prepareKeyDownData(id: Int, buffer: ControlBuffer): Boolean {
+        Handler.button.sink?.success(listOf(key, id, state))
+
         if (transmission) {
             buffer.bitfield = bitmask
             buffer.putCharData(data)
@@ -35,7 +38,9 @@ class Button(
         return false
     }
 
-    private fun prepareKeyUpData(buffer: ControlBuffer): Boolean {
+    private fun prepareKeyUpData(id: Int, buffer: ControlBuffer): Boolean {
+        Handler.button.sink?.success(listOf(key, id, state))
+
         if (transmission) {
             buffer.bitfield = bitmask
             buffer.putCharData(data.uppercaseChar())

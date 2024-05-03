@@ -1,12 +1,15 @@
-part of '../models/control.dart';
+part of '../models/handler.dart';
 
 typedef Dpad = void Function(DpadEvent event);
 
 class DpadEvent {
-  DpadEvent(List<int> list)
-      : x = list[0],
-        y = list[1];
+  DpadEvent(
+    this.device,
+    this.x,
+    this.y,
+  );
 
+  final int device;
   final int x;
   final int y;
 
@@ -14,90 +17,80 @@ class DpadEvent {
   String toString() => '[DpadEvent (x: $x, y: $y)]';
 }
 
-class DpadHandler extends KeyHandler {
-  static Map<Button, DpadHandler>? _map;
+class DpadHandler extends KeyHandler<DpadEvent> {
+  bool state = false;
+
+  static Map<Button, DpadHandler>? map;
+
+  static void Function(DpadEvent event)? _onUse;
 
   static StreamSubscription<DpadEvent>? _subscription;
 
-  static Dpad? _onEvent;
+  static bool assignMotionEvent(Dpad? onUse) {
+    _onUse = onUse;
 
-  @override
-  bool assignKeyEvent(Press? onPress, Release? onRelease) {
-    if (super.assignKeyEvent(onPress, onRelease)) {
-      _subscription ??= GamepadPlatform.instance.dpadEvents.listen(_onDpad);
+    if (_onUse != null) {
+      _subscription ??= onMotion();
       return true;
-    } else if (_subscription != null) {
-      bool isUnused = _onEvent == null;
-
-      for (DpadHandler value in _map!.values) {
-        isUnused &= value._onPress == null;
-        isUnused &= value._onRelease == null;
-        if (!isUnused) return true;
-      }
+    }
+    if (_subscription != null) {
       _subscription!.cancel();
       _subscription = null;
     }
     return false;
   }
 
-  static Map<Button, DpadHandler> get map {
-    _map ??= <Button, DpadHandler>{
-      for (final value in Button.values)
-        if (value.key == null) value: DpadHandler(),
-    };
-    return _map!;
-  }
+  static StreamSubscription<DpadEvent> onMotion() {
+    return GamepadPlatform.instance.dpadEvents.listen((event) {
+      if (map != null) {
+        final up = map![Button.up]!;
+        final down = map![Button.down]!;
+        final left = map![Button.left]!;
+        final right = map![Button.right]!;
 
-  static bool assignMotionEvent(Dpad? onEvent) {
-    _onEvent = onEvent;
-
-    if (onEvent != null) {
-      _subscription ??= GamepadPlatform.instance.dpadEvents.listen(_onDpad);
-      return true;
-    } else if (_subscription != null) {
-      bool isUnused = true;
-
-      if (_map != null) {
-        for (DpadHandler value in _map!.values) {
-          isUnused &= value._onPress == null;
-          isUnused &= value._onRelease == null;
-          if (!isUnused) return true;
+        if (event.x < 0) {
+          left.onKeyDown(ButtonEvent(Button.left.index, event.device, true));
+          right.onKeyUp(ButtonEvent(Button.right.index, event.device, false));
+        } else if (event.x > 0) {
+          left.onKeyUp(ButtonEvent(Button.left.index, event.device, false));
+          right.onKeyDown(ButtonEvent(Button.right.index, event.device, true));
+        } else {
+          left.onKeyUp(ButtonEvent(Button.left.index, event.device, false));
+          right.onKeyUp(ButtonEvent(Button.right.index, event.device, false));
+        }
+        if (event.y < 0) {
+          up.onKeyDown(ButtonEvent(Button.up.index, event.device, true));
+          down.onKeyUp(ButtonEvent(Button.down.index, event.device, false));
+        } else if (event.y > 0) {
+          up.onKeyUp(ButtonEvent(Button.up.index, event.device, false));
+          down.onKeyDown(ButtonEvent(Button.down.index, event.device, true));
+        } else {
+          up.onKeyUp(ButtonEvent(Button.up.index, event.device, false));
+          down.onKeyUp(ButtonEvent(Button.down.index, event.device, false));
         }
       }
-      _subscription!.cancel();
-      _subscription = null;
+      _onUse?.call(event);
+    });
+  }
+
+  @override
+  StreamSubscription<DpadEvent> onKey() => onMotion();
+
+  @override
+  bool onKeyDown(ButtonEvent event) {
+    if (!state) {
+      state = true;
+      return super.onKeyDown(event);
     }
     return false;
   }
 
-  static void _onDpad(DpadEvent event) {
-    if (_map != null) {
-      final up = _map![Button.up]!;
-      final down = _map![Button.down]!;
-      final left = _map![Button.left]!;
-      final right = _map![Button.right]!;
-
-      if (event.x < 0) {
-        left._onKeyDown();
-        right._onKeyUp();
-      } else if (event.x > 0) {
-        left._onKeyUp();
-        right._onKeyDown();
-      } else {
-        left._onKeyUp();
-        right._onKeyUp();
-      }
-      if (event.y < 0) {
-        up._onKeyDown();
-        down._onKeyUp();
-      } else if (event.y > 0) {
-        up._onKeyUp();
-        down._onKeyDown();
-      } else {
-        up._onKeyUp();
-        down._onKeyUp();
-      }
+  @override
+  bool onKeyUp(ButtonEvent event) {
+    if (state) {
+      state = false;
+      return super.onKeyUp(event);
     }
-    _onEvent?.call(event);
+    return false;
   }
 }

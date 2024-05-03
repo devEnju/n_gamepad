@@ -93,19 +93,15 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         map[button] = Gamepad.instance.assignButtonListener(
           button,
-          onPress: () => onGamepadButtonPress(button),
-          onRelease: () => onGamepadButtonRelease(button),
+          onPress: onGamepadButtonEvent,
+          onRelease: onGamepadButtonEvent,
         );
       }
     });
   }
 
-  void onGamepadButtonPress(Button button) {
-    setState(() => text = '[ButtonEvent (${button.name}: pressed)]');
-  }
-
-  void onGamepadButtonRelease(Button button) {
-    setState(() => text = '[ButtonEvent (${button.name}: released)]');
+  void onGamepadButtonEvent(ButtonEvent event) {
+    setState(() => text = '$event');
   }
 
   void toggleGamepadDpadListener() {
@@ -114,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         map[Control.dpad] = Gamepad.instance.assignDpadListener();
       } else {
         map[Control.dpad] = Gamepad.instance.assignDpadListener(
-          onEvent: onGamepadDpadEvent,
+          onUse: onGamepadDpadEvent,
         );
       }
     });

@@ -1,48 +1,52 @@
-part of '../models/control.dart';
+part of '../models/handler.dart';
 
-typedef Press = void Function();
-typedef Release = void Function();
+typedef Press = void Function(ButtonEvent event);
+typedef Release = void Function(ButtonEvent event);
 
-class ButtonHandler extends KeyHandler {
-  ButtonHandler(this._button);
+class ButtonEvent {
+  ButtonEvent(
+    int index,
+    this.device,
+    this.state,
+  ) : button = Button.values[index];
 
-  final Button _button;
+  final Button button;
+  final int device;
+  final bool state;
 
-  static Map<LogicalKeyboardKey, ButtonHandler>? _map;
+  String get _state => state ? 'pressed' : 'released';
 
-  static Map<LogicalKeyboardKey, ButtonHandler> get map {
-    if (_map == null) {
-      _map = <LogicalKeyboardKey, ButtonHandler>{
-        for (final value in Button.values)
-          if (value.key != null) value.key!: ButtonHandler(value),
-      };
+  @override
+  String toString() => '[ButtonEvent (${button.name} - $_state)]';
+}
 
-      HardwareKeyboard.instance.addHandler(
-        (event) => _map![event.logicalKey]?.onKey(event) ?? false,
-      );
-    }
-    return _map!;
-  }
+class ButtonHandler extends KeyHandler<ButtonEvent> {
+  ButtonHandler(this.button);
+
+  final Button button;
+
+  static List<ButtonHandler>? list;
 
   @override
   bool assignKeyEvent(Press? onPress, Release? onRelease) {
     if (super.assignKeyEvent(onPress, onRelease)) {
       return true;
-    } else if (_button == Button.zl && JoystickHandler.left._onEvent != null) {
+    }
+    if (Handler.trigger(Hand.left).isKey(button)) {
       return true;
-    } else if (_button == Button.zr && JoystickHandler.right._onEvent != null) {
+    }
+    if (Handler.trigger(Hand.right).isKey(button)) {
       return true;
     }
     return false;
   }
 
-  bool onKey(KeyEvent event) {
-    if (event is KeyDownEvent) {
-      return _onKeyDown();
-    }
-    if (event is KeyUpEvent) {
-      return _onKeyUp();
-    }
-    return false;
+  @override
+  StreamSubscription<ButtonEvent> onKey() {
+    return GamepadPlatform.instance.buttonEvents.listen((event) {
+      ButtonHandler handler = Handler.button(event.button);
+
+      event.state ? handler.onKeyDown(event) : handler.onKeyUp(event);
+    });
   }
 }

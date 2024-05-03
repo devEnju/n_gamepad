@@ -19,14 +19,14 @@ class Joystick(
                 x = data[0]
                 y = data[1]
 
-                return prepareMotionData(MotionListener.buffer)
+                return prepareMotionData(event.deviceId, MotionListener.buffer)
             }
         }
         return false
     }
 
-    private fun prepareMotionData(buffer: ControlBuffer): Boolean {
-        sink?.success(data)
+    private fun prepareMotionData(id: Int, buffer: ControlBuffer): Boolean {
+        Handler.joystick.sink?.success(listOf(hand.ordinal, id, x, y))
 
         if (transmission) {
             buffer.bitfield += bitmask

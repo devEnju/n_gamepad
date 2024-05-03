@@ -27,7 +27,7 @@ class KeyListener(
             }
 
             if (event.source and InputDevice.SOURCE_DPAD == InputDevice.SOURCE_DPAD) {
-                gamepad.dpad.onEvent(keyCode, event)
+                gamepad.dpad.onEvent(event)
 
                 return connection.send(MotionListener.buffer)
             }

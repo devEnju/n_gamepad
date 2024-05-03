@@ -9,8 +9,8 @@ class Dpad : Control(0b00001000) {
     private var x = 0
     private var y = 0
 
-    fun onEvent(keyCode: Int, event: KeyEvent): Boolean {
-        when (keyCode) {
+    fun onEvent(event: KeyEvent): Boolean {
+        when (event.keyCode) {
             KeyEvent.KEYCODE_DPAD_CENTER -> {
                 data[0] = 0
                 data[1] = 0
@@ -33,7 +33,7 @@ class Dpad : Control(0b00001000) {
             x = data[0]
             y = data[1]
 
-            return prepareMotionData(MotionListener.buffer)
+            return prepareMotionData(event.deviceId, MotionListener.buffer)
         }
         return false
     }
@@ -47,14 +47,14 @@ class Dpad : Control(0b00001000) {
                 x = data[0]
                 y = data[1]
 
-                return prepareMotionData(MotionListener.buffer)
+                return prepareMotionData(event.deviceId, MotionListener.buffer)
             }
         }
         return false
     }
 
-    private fun prepareMotionData(buffer: ControlBuffer): Boolean {
-        sink?.success(data)
+    private fun prepareMotionData(id: Int, buffer: ControlBuffer): Boolean {
+        Handler.dpad.sink?.success(listOf(id, x, y))
 
         if (transmission) {
             buffer.bitfield += bitmask

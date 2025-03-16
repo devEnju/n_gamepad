@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'src/models/handler.dart';
+import 'src/helpers/input.dart';
 
 import 'n_gamepad_method_channel.dart';
 

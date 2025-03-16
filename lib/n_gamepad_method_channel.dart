@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-import 'src/models/handler.dart';
+import 'src/helpers/input.dart';
 
 import 'n_gamepad_platform_interface.dart';
 

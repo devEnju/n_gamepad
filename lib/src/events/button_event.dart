@@ -1,4 +1,4 @@
-part of '../models/handler.dart';
+part of '../helpers/input.dart';
 
 typedef Press = void Function(ButtonEvent event);
 typedef Release = void Function(ButtonEvent event);

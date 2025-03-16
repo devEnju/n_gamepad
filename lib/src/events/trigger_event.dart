@@ -1,4 +1,4 @@
-part of '../models/handler.dart';
+part of '../helpers/input.dart';
 
 typedef Trigger = void Function(TriggerEvent event);
 

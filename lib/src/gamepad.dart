@@ -2,8 +2,7 @@ import 'dart:async';
 
 import '../n_gamepad_platform_interface.dart';
 
-import 'models/control.dart';
-import 'models/handler.dart';
+import 'helpers/input.dart';
 
 /// A class for managing gamepad inputs in a Flutter application.
 ///
@@ -14,10 +13,10 @@ import 'models/handler.dart';
 /// Use the singleton [instance] to access the methods provided by this class.
 class Gamepad {
   /// Private constructor to enforce singleton pattern.
-  Gamepad._();
+  Gamepad._internal();
 
   /// The unique instance of the [Gamepad] class.
-  static final instance = Gamepad._();
+  static final instance = Gamepad._internal();
 
   /// Assigns press and release listeners to a specified [Button].
   ///
@@ -115,10 +114,10 @@ class Gamepad {
 /// methods.
 class NetworkGamepad extends Gamepad {
   /// Private constructor to enforce singleton pattern.
-  NetworkGamepad._() : super._();
+  NetworkGamepad._internal() : super._internal();
 
   /// The unique instance of the [NetworkGamepad] class.
-  static final instance = NetworkGamepad._();
+  static final instance = NetworkGamepad._internal();
 
   /// Stops transmission of a specific [Control].
   ///

@@ -19,6 +19,9 @@ class MockConnection extends Connection {
 
   @override
   Future<void> resetPlatformAddress() async {}
+
+  @override
+  void broadcastGamepad(List<int> code) {}
 }
 
 void main() {
@@ -30,7 +33,7 @@ void main() {
     controller = StreamController<Datagram?>();
 
     final connection = MockConnection(
-      await RawDatagramSocket.bind(Connection.loopback, 0),
+      await RawDatagramSocket.bind(InternetAddress.loopbackIPv4, 0),
       controller.stream,
     );
 

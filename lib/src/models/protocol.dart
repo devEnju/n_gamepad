@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import '../connection.dart';
-
 import 'game.dart';
 
 /// The [ConnectionPacket] class is used to temporarily store incoming data from
@@ -14,7 +12,7 @@ import 'game.dart';
 class ConnectionPacket {
   /// A private constructor that creates an empty [ConnectionPacket].
   ConnectionPacket._internal()
-      : _address = Connection.loopback,
+      : _address = InternetAddress.loopbackIPv4,
         _message = 0,
         _code = List.empty(),
         _data = '';

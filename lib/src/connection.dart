@@ -47,9 +47,6 @@ class Connection {
   /// utilize platform-specific code.
   static final gamepad = NetworkGamepad.instance;
 
-  /// A constant representing the loopback IP address (127.0.0.1).
-  static final loopback = InternetAddress('127.0.0.1');
-
   /// A constant representing the broadcast IP address (255.255.255.255).
   static final broadcast = InternetAddress('255.255.255.255');
 

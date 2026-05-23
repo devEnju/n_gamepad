@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:n_gamepad/src/models/game.dart';
 import 'package:n_gamepad/src/models/protocol.dart';
 import 'package:n_gamepad/src/services/stream_service.dart';
-import 'package:n_gamepad/src/connection.dart';
 
 import 'connection_test.dart';
 import 'game_test.dart';
@@ -21,7 +20,7 @@ void main() {
     controller = StreamController<Datagram?>();
 
     final connection = MockConnection(
-      await RawDatagramSocket.bind(Connection.loopback, 0),
+      await RawDatagramSocket.bind(InternetAddress.loopbackIPv4, 0),
       controller.stream,
     );
 

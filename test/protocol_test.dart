@@ -61,7 +61,7 @@ void main() {
       () {
         final datagram = Datagram(
           Uint8List.fromList([]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         );
 
@@ -74,7 +74,7 @@ void main() {
       () {
         final datagram = Datagram(
           Uint8List.fromList([0, 0, 0]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         );
 
@@ -87,7 +87,7 @@ void main() {
       () {
         final datagram = Datagram(
           Uint8List.fromList([0, 0, 0, 0]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         );
 
@@ -100,7 +100,7 @@ void main() {
       () {
         final datagram = Datagram(
           Uint8List.fromList([0]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         );
 
@@ -113,11 +113,11 @@ void main() {
       () {
         final packet = ConnectionPacket.buffer(Datagram(
           Uint8List.fromList([0, 0, 0, 0, ...'Hello World'.codeUnits]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         ));
 
-        expect(packet.address, Connection.loopback);
+        expect(packet.address, InternetAddress.loopbackIPv4);
         expect(packet.message, 0);
         expect(packet.code, [0, 0, 0]);
         expect(packet.data, 'Hello World');
@@ -129,11 +129,11 @@ void main() {
       () {
         final packet = ConnectionPacket.buffer(Datagram(
           Uint8List.fromList([Server.info, 0, 0, 0]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         ));
 
-        expect(packet.address, Connection.loopback);
+        expect(packet.address, InternetAddress.loopbackIPv4);
         expect(packet.message, Server.info);
         expect(packet.code, [0, 0, 0]);
         expect(packet.data, '');
@@ -145,11 +145,11 @@ void main() {
       () {
         final packet = ConnectionPacket.buffer(Datagram(
           Uint8List.fromList([Server.quit, 0, 0, 0]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         ));
 
-        expect(packet.address, Connection.loopback);
+        expect(packet.address, InternetAddress.loopbackIPv4);
         expect(packet.message, Server.quit);
         expect(packet.code, [0, 0, 0]);
         expect(packet.data, '');
@@ -161,11 +161,11 @@ void main() {
       () {
         final packet = ConnectionPacket.buffer(Datagram(
           Uint8List.fromList([Client.broadcast, 0, 0, 0]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         ));
 
-        expect(packet.address, Connection.loopback);
+        expect(packet.address, InternetAddress.loopbackIPv4);
         expect(packet.message, Client.broadcast);
         expect(packet.code, [0, 0, 0]);
         expect(packet.data, '');
@@ -177,13 +177,13 @@ void main() {
       () {
         final packet = ConnectionPacket.buffer(Datagram(
           Uint8List.fromList([0, 0, 0, 0, ...'Hello World'.codeUnits]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         ));
 
         final other = ConnectionPacket.buffer(Datagram(
           Uint8List.fromList([0, 1, 1, 1, ...'Hello World'.codeUnits]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         ));
 
@@ -198,7 +198,7 @@ void main() {
       () {
         final datagram = Datagram(
           Uint8List.fromList([]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         );
 
@@ -211,7 +211,7 @@ void main() {
       () {
         final datagram = Datagram(
           Uint8List.fromList([0]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         );
 
@@ -224,7 +224,7 @@ void main() {
       () {
         final datagram = Datagram(
           Uint8List.fromList([0, 0]),
-          Connection.loopback,
+          InternetAddress.loopbackIPv4,
           Connection.port,
         );
 

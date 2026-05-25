@@ -7,25 +7,9 @@ A Flutter plugin to listen to game controller inputs.
 
 ## Getting started
 
-Add the following lines of code to your `FlutterActivity` in order to override Android's standard input settings for gamepads:
+Add the package to your `pubspec.yaml` and the plugin registers itself automatically via Flutter's plugin mechanism. No additional setup is required.
 
-```kotlin
-class MainActivity : FlutterActivity() {
-    private lateinit var view: View
-
-    override fun onStart() {
-        super.onStart()
-
-        view = window.findViewById<ViewGroup>(FLUTTER_VIEW_ID).getChildAt(0)
-    }
-
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
-        return view.dispatchKeyEvent(event)
-    }
-}
-```
-
-This configuration step is necessary for the proper functioning of the plugin on the Android platform.
+> **Android:** This plugin listens for controller key events by wrapping the activity's `Window.Callback`. It works alongside other plugins as long as they forward callbacks correctly and do not consume the relevant key events.
 
 ## Usage
 

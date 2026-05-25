@@ -134,6 +134,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun onAttach(binding: ActivityPluginBinding) {
         observer.activity = binding.activity
+        observer.callback = binding.activity.window.callback
         observer.lifecycle = (binding.lifecycle as HiddenLifecycleReference).lifecycle
         observer.lifecycle.addObserver(observer)
     }

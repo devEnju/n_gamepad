@@ -4,17 +4,16 @@ import android.app.Activity
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
-import android.view.ViewGroup
+import android.view.Window.Callback
 import android.view.WindowManager.LayoutParams
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import io.flutter.embedding.android.FlutterActivity
 
 class GamepadObserver : DefaultLifecycleObserver {
     lateinit var activity: Activity
+    lateinit var callback: Callback
     lateinit var lifecycle: Lifecycle
-    lateinit var flutterView: ViewGroup
 
     private lateinit var layoutParams: LayoutParams
     private lateinit var sensorManager: SensorManager
@@ -36,20 +35,20 @@ class GamepadObserver : DefaultLifecycleObserver {
         sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-
-        val view = activity.window.decorView
-
-        view.setOnGenericMotionListener(motion)
+        
+        activity.window.decorView.setOnGenericMotionListener(motion)
     }
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
-        flutterView = activity.window.findViewById(FlutterActivity.FLUTTER_VIEW_ID)
+        activity.window.callback = key.dispatcher
+    }
 
-        val view = flutterView.getChildAt(0)
+    override fun onStop(owner: LifecycleOwner) {
+        activity.window.callback = callback
 
-        view.setOnKeyListener(key)
+        super.onStop(owner)
     }
 
     override fun onResume(owner: LifecycleOwner) {

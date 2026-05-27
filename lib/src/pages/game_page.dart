@@ -6,7 +6,10 @@ import '../models/component.dart';
 import '../models/game.dart';
 import '../models/protocol.dart';
 
+import '../services/stream_service.dart';
+
 import '../connection.dart';
+import '../gamepad.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage(this.game, this.initial, {super.key});
@@ -19,6 +22,8 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
+  late StreamService connection;
+  late NetworkGamepad controller;
   late StatePacket previous;
   ObservableTimer? timer;
 
@@ -27,6 +32,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
+    connection = Connection.service;
+    controller = Connection.gamepad;
     previous = widget.initial;
   }
 
@@ -35,7 +42,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     return Scaffold(
       body: StreamBuilder<StatePacket>(
         initialData: widget.initial,
-        stream: Connection.service.stream,
+        stream: connection.stream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final current = snapshot.data!;
@@ -47,8 +54,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             } else if (timer == null) {
               timer = ObservableTimer(
                 component.screenTimeout!.onInteraction,
-                () => Connection.gamepad.switchScreenBrightness(false),
-                () => Connection.gamepad.switchScreenBrightness(true),
+                () => controller.switchScreenBrightness(false),
+                () => controller.switchScreenBrightness(true),
               );
             } else if (previous != current) {
               resetTimer(component.screenTimeout!.onStateChange);
@@ -87,8 +94,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     timer?.cancel();
-    Connection.service.reset();
-    Connection.gamepad.resetControls();
+    connection.reset();
+    controller.resetControls();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

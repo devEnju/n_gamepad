@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import '../n_gamepad_platform_interface.dart';
@@ -16,20 +17,20 @@ import 'gamepad.dart';
 /// Please do not use the raw methods of a [Connection] object. Instead, use the
 /// better suited methods from the [StreamService] instance to broadcast and
 /// send specific requests to a game server. To create a new [Connection]
-/// object, wait for the [instantiate] method to finish.
+/// object, wait for the [start] method to finish.
 ///
 /// Example usage:
 ///
 /// ```dart
-/// await Connection.instantiate();
+/// await Connection.start();
 /// ```
 class Connection {
   /// Constructs a new [Connection] instance with the provided [socket] and
   /// [stream].
   ///
-  /// Refrain from instantiating objects via the constructor. The [instantiate]
-  /// method should be used instead since it also creates an associated
-  /// [StreamService] instance.
+  /// Refrain from instantiating objects via the constructor. The [start] method
+  /// should be used instead since it also creates an associated [StreamService]
+  /// instance.
   Connection(this.socket, this.stream);
 
   /// The [RawDatagramSocket] used for sending and receiving datagrams.
@@ -50,55 +51,74 @@ class Connection {
   /// A constant representing the broadcast IP address (255.255.255.255).
   static final broadcast = InternetAddress('255.255.255.255');
 
-  /// A constant representing standard port to be used on a game server.
+  /// A constant representing the standard port to be used on a game server.
   static const int port = 44700;
 
-  /// The most recent instance of the [Connection] class.
-  static Connection? _instance;
+  /// The most recent completer of the [Connection] class.
+  static Completer<Connection>? _completer;
 
   /// The [StreamService] instance associated with the [Connection] class.
   static StreamService? _service;
 
   /// Returns the currently active instance of [StreamService].
   ///
-  /// This getter asserts that [_service] is not null before returning it,
-  /// ensuring that the [Connection] instance has already been instantiated.
-  static StreamService get service {
-    assert(_service != null, "Connection needs to be instantiated first.");
-    return _service!;
-  }
+  /// Throws a [StateError] if [start] has not been called yet or has not
+  /// completed, ensuring the [Connection] has been fully instantiated.
+  static StreamService get service => _completer?.isCompleted != true
+      ? throw StateError('Connection needs to be started first.')
+      : _service!;
 
-  /// Asynchronously instantiates a [Connection] object and its related service.
+  /// Asynchronously starts a new [Connection] instance and its related service.
   ///
-  /// If an instance of [Connection] already exists, the [destroy] method is
-  /// called to clean up resources. The method then binds a new
-  /// [RawDatagramSocket] to the local IP address of the device in a network and
-  /// creates a stream which is used to process incoming network events in the
-  /// service.
+  /// If a connection is already being started or fully instantiated, returns a
+  /// future that completes when that connection is ready. Otherwise, binds a
+  /// new [RawDatagramSocket] to the local IP address of the device in a network
+  /// and creates a stream which is used to process incoming network events in
+  /// the [StreamService].
   ///
-  /// Returns a [Connection] object after the Future has been resolved.
-  ///
-  /// Errors of the [RawDatagramSocket] are uncaught.
-  static Future<Connection> instantiate() async {
-    if (_instance != null) destroy();
-    final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
-    final stream = socket.map<Datagram?>(
-      (event) => (event == RawSocketEvent.read) ? socket.receive() : null,
-    );
-    _instance = Connection(socket, stream);
-    _service = StreamService(_instance!);
-    return _instance!;
+  /// Errors of binding the [RawDatagramSocket] propagate through the returned
+  /// [Future].
+  static Future<void> start() {
+    final completer = _completer ?? Completer();
+
+    if (_completer == null) {
+      _completer = completer;
+
+      RawDatagramSocket.bind(InternetAddress.anyIPv4, 0).then((socket) {
+        final stream = socket.map<Datagram?>(
+          (event) => (event == RawSocketEvent.read) ? socket.receive() : null,
+        );
+        final connection = Connection(socket, stream);
+
+        _service = StreamService(connection);
+        completer.complete(connection);
+      }).catchError((error, stackTrace) {
+        _completer = null;
+        completer.completeError(error, stackTrace);
+      });
+    }
+    return completer.future.then((_) {});
   }
 
   /// Cleans up the [Connection] instance and its related services.
   ///
-  /// This method terminates the service associated with the [Connection]
-  /// instance by resetting the [StreamService]. It then closes the
-  /// [RawDatagramSocket] associated with the [Connection] instance.
-  static void destroy() {
-    service.quit();
-    service.stopBroadcast();
-    _instance!.socket.close();
+  /// This method waits for the in-progress [_completer] to be finished before
+  /// terminating services associated with the [Connection] instance. After
+  /// shutting down all resources of the [StreamService], it also closes the
+  /// [RawDatagramSocket] while resetting the static state of this class.
+  static Future<void> stop() async {
+    final instance = await _completer?.future
+        .then<Connection?>((value) => value)
+        .catchError((_) => null);
+
+    _service?.quit();
+    _service?.stopBroadcast();
+    _service = null;
+
+    if (_completer != null) {
+      instance?.socket.close();
+    }
+    _completer = null;
   }
 
   /// Sets the connection [address] of the platform by delegating this request

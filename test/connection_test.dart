@@ -286,4 +286,109 @@ void main() {
       );
     });
   });
+
+  group('Static instantiation methods of Connection', () {
+    setUpAll(TestWidgetsFlutterBinding.ensureInitialized);
+
+    group('when no connection has been started', () {
+      test('Service getter throws a StateError', () {
+        expect(() => Connection.service, throwsStateError);
+      });
+
+      test('Stop completes as a no-op', () async {
+        final first = Connection.stop();
+
+        await expectLater(first, completes);
+        expect(() => Connection.service, throwsStateError);
+      });
+
+      test('Concurrent stop calls both complete as no-ops', () async {
+        final first = Connection.stop();
+        final second = Connection.stop();
+
+        await expectLater(Future.wait([first, second]), completes);
+        expect(() => Connection.service, throwsStateError);
+      });
+
+      test('Concurrent stops during an active bind cleans up', () async {
+        final first = Connection.start();
+        final second = Connection.stop();
+        final third = Connection.stop();
+
+        await Future.wait([first, second, third]);
+
+        expect(() => Connection.service, throwsStateError);
+      });
+    });
+
+    group('when connection has been started', () {
+      setUp(() async {
+        await Connection.start();
+      });
+
+      test('Service is accessible', () {
+        expect(() => Connection.service, returnsNormally);
+      });
+
+      test('Calling start again returns the same service instance', () async {
+        final before = Connection.service;
+
+        await Connection.start();
+
+        expect(Connection.service, same(before));
+      });
+
+      test('Concurrent start calls share the same service instance', () async {
+        final before = Connection.service;
+        final second = Connection.start();
+        final third = Connection.start();
+
+        await Future.wait([second, third]);
+
+        expect(Connection.service, same(before));
+      });
+
+      test('Stop makes service throw StateError', () async {
+        await Connection.stop();
+
+        expect(() => Connection.service, throwsStateError);
+      });
+
+      test('Sequential stop calls reset service once', () async {
+        await Connection.stop();
+
+        final second = Connection.stop();
+
+        await expectLater(second, completes);
+        expect(() => Connection.service, throwsStateError);
+      });
+
+      test('Concurrent stop calls both complete without throwing', () async {
+        final second = Connection.stop();
+        final third = Connection.stop();
+
+        await expectLater(Future.wait([second, third]), completes);
+        expect(() => Connection.service, throwsStateError);
+      });
+    });
+
+    group('after restart', () {
+      late SinkService before;
+
+      setUp(() async {
+        await Connection.start();
+        before = Connection.service;
+        await Connection.stop();
+        await Connection.start();
+      });
+
+      test('Service is accessible', () {
+        expect(() => Connection.service, returnsNormally);
+      });
+
+      test('Service is a different instance from before the restart', () {
+        expect(Connection.service, isNot(same(before)));
+      });
+    });
+  });
 }

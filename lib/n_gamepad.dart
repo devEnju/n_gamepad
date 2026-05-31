@@ -17,8 +17,3 @@ export 'src/helpers/input.dart'
 export 'src/models/component.dart';
 export 'src/models/game.dart';
 export 'src/models/protocol.dart' show StatePacket, UpdatePacket;
-
-export 'src/services/sink_service.dart';
-export 'src/services/input_service.dart';
-
-export 'src/bridge.dart';

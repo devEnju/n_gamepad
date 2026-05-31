@@ -75,7 +75,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 result.success(null)
             }
             "stop_control" -> {
-                val control = observer.gamepad.control[call.argument<String>("control")]
+                val control = Gamepad.control[call.argument<String>("control")]
 
                 if (control != null) {
                     control.stop()
@@ -85,7 +85,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
             }
             "block_control" -> {
-                val control = observer.gamepad.control[call.argument<String>("control")]
+                val control = Gamepad.control[call.argument<String>("control")]
 
                 if (control != null) {
                     control.block()
@@ -95,7 +95,7 @@ class GamepadPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
             }
             "resume_control" -> {
-                val control = observer.gamepad.control[call.argument<String>("control")]
+                val control = Gamepad.control[call.argument<String>("control")]
                 val safe = call.argument<Boolean>("safe")
 
                 if (control != null && safe != null) {

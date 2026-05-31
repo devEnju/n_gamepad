@@ -5,7 +5,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 
 class SensorListener(
-    private val gamepad: Gamepad,
     private val connection: Connection,
 ) : SensorEventListener {
     companion object {
@@ -14,8 +13,8 @@ class SensorListener(
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null) {
-            gamepad.gyroscope.onEvent(event)
-            gamepad.accelerometer.onEvent(event)
+            Gamepad.gyroscope.onEvent(event)
+            Gamepad.accelerometer.onEvent(event)
 
             connection.send(buffer)
         }

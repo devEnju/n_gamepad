@@ -21,12 +21,11 @@ class GamepadObserver : DefaultLifecycleObserver {
     private var gyroscopeSensor: Sensor? = null
     private var accelerometerSensor: Sensor? = null
 
-    val gamepad = Gamepad()
     val connection = Connection(this)
 
-    private val sensor = SensorListener(gamepad, connection)
-    private val key = KeyListener(this, gamepad, connection)
-    private val motion = MotionListener(gamepad, connection)
+    private val sensor = SensorListener(connection)
+    private val key = KeyListener(this, connection)
+    private val motion = MotionListener(connection)
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)

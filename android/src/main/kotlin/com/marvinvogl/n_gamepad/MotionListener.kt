@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.OnGenericMotionListener
 
 class MotionListener(
-    private val gamepad: Gamepad,
     private val connection: Connection,
 ) : OnGenericMotionListener {
     companion object {
@@ -16,14 +15,14 @@ class MotionListener(
     override fun onGenericMotion(v: View?, event: MotionEvent?): Boolean {
         if (event != null) {
             if (event.isFromSource(InputDevice.SOURCE_JOYSTICK)) {
-                gamepad.dpad.onEvent(event)
+                Gamepad.dpad.onEvent(event)
 
                 connection.send(KeyListener.buffer)
 
-                gamepad.triggerLeft.onEvent(event)
-                gamepad.triggerRight.onEvent(event)
-                gamepad.joystickLeft.onEvent(event)
-                gamepad.joystickRight.onEvent(event)
+                Gamepad.triggerLeft.onEvent(event)
+                Gamepad.triggerRight.onEvent(event)
+                Gamepad.joystickLeft.onEvent(event)
+                Gamepad.joystickRight.onEvent(event)
 
                 return connection.send(buffer)
             }

@@ -15,7 +15,6 @@ import android.view.accessibility.AccessibilityEvent
 
 class KeyListener(
     private val observer: GamepadObserver,
-    private val gamepad: Gamepad,
     private val connection: Connection,
 ) : OnKeyListener {
     companion object {
@@ -26,12 +25,12 @@ class KeyListener(
     override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
         if (event != null) {
             if (event.isFromSource(InputDevice.SOURCE_GAMEPAD)) {
-                gamepad.button[keyCode]?.onEvent(event) ?: return false
+                Gamepad.button[keyCode]?.onEvent(event) ?: return false
 
                 return connection.send(buffer)
             }
             if (event.isFromSource(InputDevice.SOURCE_DPAD)) {
-                gamepad.dpad.onEvent(event)
+                Gamepad.dpad.onEvent(event)
 
                 return connection.send(buffer)
             }

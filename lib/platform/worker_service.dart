@@ -9,23 +9,23 @@ import 'channel.g.dart';
 class AndroidWorker extends WorkerService {
   WorkerConfiguration configuration = const WorkerConfiguration();
 
-  KeyEventListener? listener;
+  KeyCallback? listener;
 
   @override
   void workerMethod(SendPort mainSendPort) {
     final implementer = JImplementer();
 
-    KeyEventListener.implementIn(
+    KeyCallback.implementIn(
       implementer,
-      $KeyEventListener(
+      $KeyCallback(
         onKeyEvent: (keyCode, action) {
           mainSendPort.send([keyCode, action]);
         },
       ),
     );
 
-    listener = GamepadChannel.assignListener(
-      implementer.implement<KeyEventListener>(),
+    listener = GamepadChannel.assignKeyCallback(
+      implementer.implement<KeyCallback>(),
     );
   }
 

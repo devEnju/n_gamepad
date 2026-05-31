@@ -26,7 +26,8 @@ void main() {
   generateJniBindings(
     generateConfig([
       'GamepadChannel',
-      'KeyEventListener',
+      'KeyCallback',
+      'MotionCallback',
     ], 'channel'),
   );
 

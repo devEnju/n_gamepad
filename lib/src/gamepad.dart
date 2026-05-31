@@ -4,6 +4,9 @@ import '../n_gamepad_platform_interface.dart';
 
 import 'helpers/input.dart';
 
+import 'services/input_service.dart';
+import 'services/stream_service.dart';
+
 /// A class for managing gamepad inputs in a Flutter application.
 ///
 /// The [Gamepad] class provides a convenient way to handle various gamepad
@@ -12,11 +15,16 @@ import 'helpers/input.dart';
 ///
 /// Use the singleton [instance] to access the methods provided by this class.
 class Gamepad {
+  factory Gamepad(String id) {
+    InputService.instance ??= InputService();
+
+    return _map.putIfAbsent(id, () => Gamepad._internal());
+  }
+
+  static final _map = <String, Gamepad>{};
+
   /// Private constructor to enforce singleton pattern.
   Gamepad._internal();
-
-  /// The unique instance of the [Gamepad] class.
-  static final instance = Gamepad._internal();
 
   /// Assigns press and release listeners to a specified [Button].
   ///
@@ -113,6 +121,14 @@ class Gamepad {
 /// the [Connection] class which uses the [instance] of this class to access its
 /// methods.
 class NetworkGamepad extends Gamepad {
+  factory NetworkGamepad() {
+    if (InputService.instance is InputService) {
+      throw StateError('NetworkGamepad would must be instantiated before Gamepad.');
+    }
+    InputService.instance ??= StreamService();
+    return instance;
+  }
+
   /// Private constructor to enforce singleton pattern.
   NetworkGamepad._internal() : super._internal();
 

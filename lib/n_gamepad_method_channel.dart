@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 
 import 'src/helpers/input.dart';
 
+import '../platform/worker_service.dart';
+
 import 'n_gamepad_platform_interface.dart';
 
 /// An implementation of [GamepadPlatform] that uses method channels.
@@ -143,5 +145,10 @@ class MethodChannelGamepad extends GamepadPlatform {
         .receiveBroadcastStream()
         .map((list) => TriggerEvent(list[0], list[1], list[2]));
     return _triggerEvents!;
+  }
+
+  @override
+  AndroidWorker Function() instantiateWorker() {
+    return () => AndroidWorker();
   }
 }

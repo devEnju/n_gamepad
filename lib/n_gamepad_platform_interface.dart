@@ -4,6 +4,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'src/helpers/input.dart';
 
+import 'interface/worker.dart';
+
 import 'n_gamepad_method_channel.dart';
 
 /// The common platform interface for gamepads.
@@ -91,5 +93,9 @@ abstract class GamepadPlatform extends PlatformInterface {
   /// A broadcast stream of events from a trigger of a gamepad.
   Stream<TriggerEvent> get triggerEvents {
     throw UnimplementedError('triggerEvents has not been implemented.');
+  }
+
+  WorkerService Function() instantiateWorker() {
+    throw UnimplementedError('test');
   }
 }

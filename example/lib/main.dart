@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:n_gamepad/n_gamepad.dart';
 
 void main() {
+  Gamepad('');
+
   runApp(const MyApp());
 }
 
@@ -25,6 +27,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final gamepad = Gamepad('');
+
   final map = <Enum, bool>{
     Button.a: false,
     Button.b: false,
@@ -77,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void resetGamepadListeners() {
-    Gamepad.instance.resetControls();
+    gamepad.resetControls();
 
     setState(() {
       for (var element in map.keys) {
@@ -89,9 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void toggleGamepadButtonListener(Button button) {
     setState(() {
       if (map[button] == true) {
-        map[button] = Gamepad.instance.assignButtonListener(button);
+        map[button] = gamepad.assignButtonListener(button);
       } else {
-        map[button] = Gamepad.instance.assignButtonListener(
+        map[button] = gamepad.assignButtonListener(
           button,
           onPress: onGamepadButtonEvent,
           onRelease: onGamepadButtonEvent,
@@ -107,9 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void toggleGamepadDpadListener() {
     setState(() {
       if (map[Control.dpad] == true) {
-        map[Control.dpad] = Gamepad.instance.assignDpadListener();
+        map[Control.dpad] = gamepad.assignDpadListener();
       } else {
-        map[Control.dpad] = Gamepad.instance.assignDpadListener(
+        map[Control.dpad] = gamepad.assignDpadListener(
           onUse: onGamepadDpadEvent,
         );
       }

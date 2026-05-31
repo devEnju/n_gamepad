@@ -8,12 +8,12 @@ import '../connection.dart';
 import '../models/game.dart';
 import '../models/protocol.dart';
 
-/// The [StreamService] class manages communication between the application and
+/// The [SinkService] class manages communication between the application and
 /// a compatible game server. This class is responsible for listening to
 /// incoming data from the server, processing various types of packets, and
 /// allows to alter the state of an actively connected game.
 ///
-/// In addition, the [StreamService] class provides functionality for starting
+/// In addition, the [SinkService] class provides functionality for starting
 /// and stopping device broadcasting, selecting and resetting connections, and
 /// quitting from connected games.
 ///
@@ -22,15 +22,15 @@ import '../models/protocol.dart';
 /// timeouts, and various streams for handling incoming packets. Getter methods
 /// are available for accessing these streams, allowing other parts of the
 /// application to react to changes in the game and connections.
-class StreamService {
-  /// Constructs a new [StreamService] instance with the given [_connection].
+class SinkService {
+  /// Constructs a new [SinkService] instance with the given [_connection].
   ///
   /// Listens to the incoming data from the provided [_connection].
-  StreamService(this._connection) {
+  SinkService(this._connection) {
     _connection.stream.listen(_onData);
   }
 
-  /// The underlying [Connection] object used by this [StreamService].
+  /// The underlying [Connection] object used by this [SinkService].
   final Connection _connection;
 
   /// A [StreamController] for emitting changes to the [addresses] set.
@@ -39,7 +39,7 @@ class StreamService {
   /// A set of unique [InternetAddress] objects representing valid connections.
   final Set<InternetAddress> addresses = {};
 
-  /// The current [Game] object associated with this [StreamService], if any.
+  /// The current [Game] object associated with this [SinkService], if any.
   Game? _game;
 
   /// A [Timer] object used for periodically broadcasting the device's presence.
@@ -345,7 +345,7 @@ class StreamService {
   /// Example usage:
   ///
   /// ```dart
-  /// streamService.requestAction(GameAction.swapItem, [4, 7]);
+  /// sinkService.requestAction(GameAction.swapItem, [4, 7]);
   /// ```
   ///
   /// In this example, the `GameAction.swapItem` action is requested with the
@@ -370,7 +370,7 @@ class StreamService {
   /// Example usage:
   ///
   /// ```dart
-  /// streamService.requestState(GameState.paused);
+  /// sinkService.requestState(GameState.paused);
   /// ```
   ///
   /// In this example, the `GameState.paused` state is requested, which would
@@ -392,7 +392,7 @@ class StreamService {
   /// Example usage:
   ///
   /// ```dart
-  /// streamService.requestUpdate(GameUpdate.position);
+  /// sinkService.requestUpdate(GameUpdate.position);
   /// ```
   ///
   /// In this example, the `GameUpdate.position` update is requested, which

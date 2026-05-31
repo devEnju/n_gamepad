@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:n_gamepad/src/models/game.dart';
 import 'package:n_gamepad/src/models/protocol.dart';
-import 'package:n_gamepad/src/services/stream_service.dart';
+import 'package:n_gamepad/src/services/sink_service.dart';
 
 import 'connection_test.dart';
 import 'game_test.dart';
@@ -13,7 +13,7 @@ import 'protocol_test.dart';
 
 void main() {
   late StreamController<Datagram?> controller;
-  late StreamService service;
+  late SinkService service;
   late Game game;
 
   setUp(() async {
@@ -24,7 +24,7 @@ void main() {
       controller.stream,
     );
 
-    service = StreamService(connection);
+    service = SinkService(connection);
   });
 
   tearDown(() async {
@@ -34,7 +34,7 @@ void main() {
     await service.controller.sink.close();
   });
 
-  group('StreamService after initialization', () {
+  group('SinkService after initialization', () {
     test(
       'Receiving null does not yield event to connection stream and does not initialize other streams',
       () {
@@ -102,7 +102,7 @@ void main() {
     );
   });
 
-  group('StreamService after game is set', () {
+  group('SinkService after game is set', () {
     setUp(() {
       game = MockGame([1, 1, 1]);
 

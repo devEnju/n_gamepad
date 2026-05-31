@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:n_gamepad/src/models/game.dart';
 import 'package:n_gamepad/src/models/protocol.dart';
-import 'package:n_gamepad/src/services/stream_service.dart';
+import 'package:n_gamepad/src/services/sink_service.dart';
 import 'package:n_gamepad/src/connection.dart';
 
 import 'game_test.dart';
@@ -25,32 +25,29 @@ class MockConnection extends Connection {
 }
 
 void main() {
-  late StreamController<Datagram?> controller;
-  late StreamService service;
-  late Game game;
+  group('SinkService after game is set', () {
+    late StreamController<Datagram?> controller;
+    late SinkService service;
+    late Game game;
 
-  setUp(() async {
-    controller = StreamController<Datagram?>();
+    setUp(() async{
+      controller = StreamController<Datagram?>();
 
-    final connection = MockConnection(
-      await RawDatagramSocket.bind(InternetAddress.loopbackIPv4, 0),
-      controller.stream,
-    );
-
-    service = StreamService(connection);
-  });
-
-  tearDown(() async {
-    await controller.close();
-    await service.controller.sink.close();
-  });
-
-  group('StreamService after game is set', () {
-    setUp(() {
+      final connection = MockConnection(
+        await RawDatagramSocket.bind(InternetAddress.loopbackIPv4, 0),
+        controller.stream,
+      );
       game = MockGame([1, 1, 1]);
+
+      service = SinkService(connection);
 
       service.startBroadcast(game);
       service.stopBroadcast();
+    });
+
+    tearDown(() async {
+      await controller.close();
+      await service.controller.sink.close();
     });
 
     test(

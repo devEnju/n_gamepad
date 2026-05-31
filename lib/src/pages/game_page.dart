@@ -6,7 +6,7 @@ import '../models/component.dart';
 import '../models/game.dart';
 import '../models/protocol.dart';
 
-import '../services/stream_service.dart';
+import '../services/sink_service.dart';
 
 import '../connection.dart';
 import '../gamepad.dart';
@@ -22,7 +22,7 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
-  late StreamService connection;
+  late SinkService connection;
   late NetworkGamepad controller;
   late StatePacket previous;
   ObservableTimer? timer;

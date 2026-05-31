@@ -5,7 +5,7 @@ import '../n_gamepad_platform_interface.dart';
 
 import 'models/protocol.dart';
 
-import 'services/stream_service.dart';
+import 'services/sink_service.dart';
 
 import 'gamepad.dart';
 
@@ -15,7 +15,7 @@ import 'gamepad.dart';
 /// device in order to be able to function like a gamepad.
 ///
 /// Please do not use the raw methods of a [Connection] object. Instead, use the
-/// better suited methods from the [StreamService] instance to broadcast and
+/// better suited methods from the [SinkService] instance to broadcast and
 /// send specific requests to a game server. To create a new [Connection]
 /// object, wait for the [start] method to finish.
 ///
@@ -29,7 +29,7 @@ class Connection {
   /// [stream].
   ///
   /// Refrain from instantiating objects via the constructor. The [start] method
-  /// should be used instead since it also creates an associated [StreamService]
+  /// should be used instead since it also creates an associated [SinkService]
   /// instance.
   Connection(this.socket, this.stream);
 
@@ -57,14 +57,14 @@ class Connection {
   /// The most recent completer of the [Connection] class.
   static Completer<Connection>? _completer;
 
-  /// The [StreamService] instance associated with the [Connection] class.
-  static StreamService? _service;
+  /// The [SinkService] instance associated with the [Connection] class.
+  static SinkService? _service;
 
-  /// Returns the currently active instance of [StreamService].
+  /// Returns the currently active instance of [SinkService].
   ///
   /// Throws a [StateError] if [start] has not been called yet or has not
   /// completed, ensuring the [Connection] has been fully instantiated.
-  static StreamService get service => _completer?.isCompleted != true
+  static SinkService get service => _completer?.isCompleted != true
       ? throw StateError('Connection needs to be started first.')
       : _service!;
 
@@ -74,7 +74,7 @@ class Connection {
   /// future that completes when that connection is ready. Otherwise, binds a
   /// new [RawDatagramSocket] to the local IP address of the device in a network
   /// and creates a stream which is used to process incoming network events in
-  /// the [StreamService].
+  /// the [SinkService].
   ///
   /// Errors of binding the [RawDatagramSocket] propagate through the returned
   /// [Future].
@@ -90,7 +90,7 @@ class Connection {
         );
         final connection = Connection(socket, stream);
 
-        _service = StreamService(connection);
+        _service = SinkService(connection);
         completer.complete(connection);
       }).catchError((error, stackTrace) {
         _completer = null;
@@ -104,7 +104,7 @@ class Connection {
   ///
   /// This method waits for the in-progress [_completer] to be finished before
   /// terminating services associated with the [Connection] instance. After
-  /// shutting down all resources of the [StreamService], it also closes the
+  /// shutting down all resources of the [SinkService], it also closes the
   /// [RawDatagramSocket] while resetting the static state of this class.
   static Future<void> stop() async {
     final instance = await _completer?.future

@@ -1,21 +1,15 @@
 import 'dart:isolate';
 
 abstract class WorkerService {
-  void workerMethod(SendPort mainSendPort);
+  void workerMethod(WorkerGamepad Function() init);
 
-  void handleCommand(WorkerCommand command) {}
-
-  void dispose() {}
+  void dispose();
 }
 
-abstract class WorkerMessage {
+// TODO
+// all the previous event channel data will be modeled with this class
+sealed class WorkerMessage {
   const WorkerMessage();
-}
-
-class WorkerStarted extends WorkerMessage {
-  const WorkerStarted(this.sendPort);
-
-  final SendPort sendPort;
 }
 
 class WorkerData extends WorkerMessage {
@@ -24,6 +18,8 @@ class WorkerData extends WorkerMessage {
   final List<int> values;
 }
 
+// TODO
+// will contain all the commands for the NetworkGamepad to safely block controls
 abstract class WorkerCommand {
   const WorkerCommand();
 }
@@ -36,4 +32,14 @@ class WorkerConfiguration extends WorkerCommand {
 
 class StopWorker extends WorkerCommand {
   const StopWorker();
+}
+
+// TODO
+// holds different objects for button, joystick, etc.
+// there is one class for normal and one for network capabilities
+// those implementations have generic interface for events to expect from platforms
+class WorkerGamepad {
+  const WorkerGamepad(this.port);
+
+  final SendPort port;
 }

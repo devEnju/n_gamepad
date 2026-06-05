@@ -73,18 +73,17 @@ extension type GamepadBridge._(jni$_.JObject _$this) implements jni$_.JObject {
     ).object<GamepadBridge>();
   }
 
-  static final _id_set$device = _class.staticMethodId(
-    r'setDevice',
-    r'(Ljava/lang/String;)V',
+  static final _id_createDevice = _class.staticMethodId(
+    r'createDevice',
+    r'()V',
   );
 
-  static final _set$device =
+  static final _createDevice =
       jni$_.ProtectedJniExtensions.lookup<
             jni$_.NativeFunction<
               jni$_.JThrowablePtr Function(
                 jni$_.Pointer<jni$_.Void>,
                 jni$_.JMethodIDPtr,
-                jni$_.VarArgs<(jni$_.Pointer<jni$_.Void>,)>,
               )
             >
           >('globalEnv_CallStaticVoidMethod')
@@ -92,18 +91,12 @@ extension type GamepadBridge._(jni$_.JObject _$this) implements jni$_.JObject {
             jni$_.JThrowablePtr Function(
               jni$_.Pointer<jni$_.Void>,
               jni$_.JMethodIDPtr,
-              jni$_.Pointer<jni$_.Void>,
             )
           >();
 
-  /// from: `static public void setDevice(java.lang.String string)`
-  static set device(jni$_.JString? string) {
-    final _$string = string?.reference ?? jni$_.jNullReference;
-    _set$device(
-      _class.reference.pointer,
-      _id_set$device.pointer,
-      _$string.pointer,
-    ).check();
+  /// from: `static public void createDevice()`
+  static void createDevice() {
+    _createDevice(_class.reference.pointer, _id_createDevice.pointer).check();
   }
 
   static final _id_resetControl = _class.staticMethodId(

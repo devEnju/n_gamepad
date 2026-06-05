@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+import 'package:n_gamepad/platform/bridge.g.dart';
+
 import 'src/helpers/input.dart';
 
 import '../platform/worker_service.dart';
@@ -145,6 +147,11 @@ class MethodChannelGamepad extends GamepadPlatform {
         .receiveBroadcastStream()
         .map((list) => TriggerEvent(list[0], list[1], list[2]));
     return _triggerEvents!;
+  }
+
+  @override
+  void createDevice() {
+    GamepadBridge.createDevice();
   }
 
   @override

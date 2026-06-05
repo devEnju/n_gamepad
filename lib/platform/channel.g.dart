@@ -73,12 +73,12 @@ extension type GamepadChannel._(jni$_.JObject _$this) implements jni$_.JObject {
     ).object<GamepadChannel>();
   }
 
-  static final _id_assignKeyCallback = _class.staticMethodId(
-    r'assignKeyCallback',
-    r'(Lcom/marvinvogl/n_gamepad/KeyCallback;)Lcom/marvinvogl/n_gamepad/KeyCallback;',
+  static final _id_assignKeyCallable = _class.staticMethodId(
+    r'assignKeyCallable',
+    r'(Lcom/marvinvogl/n_gamepad/KeyCallable;)Lcom/marvinvogl/n_gamepad/KeyCallable;',
   );
 
-  static final _assignKeyCallback =
+  static final _assignKeyCallable =
       jni$_.ProtectedJniExtensions.lookup<
             jni$_.NativeFunction<
               jni$_.JniResult Function(
@@ -96,23 +96,23 @@ extension type GamepadChannel._(jni$_.JObject _$this) implements jni$_.JObject {
             )
           >();
 
-  /// from: `static public com.marvinvogl.n_gamepad.KeyCallback assignKeyCallback(com.marvinvogl.n_gamepad.KeyCallback callback)`
+  /// from: `static public com.marvinvogl.n_gamepad.KeyCallable assignKeyCallable(com.marvinvogl.n_gamepad.KeyCallable callable)`
   /// The returned object must be released after use, by calling the [release] method.
-  static KeyCallback? assignKeyCallback(KeyCallback? callback) {
-    final _$callback = callback?.reference ?? jni$_.jNullReference;
-    return _assignKeyCallback(
+  static KeyCallable? assignKeyCallable(KeyCallable? callable) {
+    final _$callable = callable?.reference ?? jni$_.jNullReference;
+    return _assignKeyCallable(
       _class.reference.pointer,
-      _id_assignKeyCallback.pointer,
-      _$callback.pointer,
-    ).object<KeyCallback?>();
+      _id_assignKeyCallable.pointer,
+      _$callable.pointer,
+    ).object<KeyCallable?>();
   }
 
-  static final _id_assignMotionCallback = _class.staticMethodId(
-    r'assignMotionCallback',
-    r'(Lcom/marvinvogl/n_gamepad/MotionCallback;)Lcom/marvinvogl/n_gamepad/MotionCallback;',
+  static final _id_assignMotionCallable = _class.staticMethodId(
+    r'assignMotionCallable',
+    r'(Lcom/marvinvogl/n_gamepad/MotionCallable;)Lcom/marvinvogl/n_gamepad/MotionCallable;',
   );
 
-  static final _assignMotionCallback =
+  static final _assignMotionCallable =
       jni$_.ProtectedJniExtensions.lookup<
             jni$_.NativeFunction<
               jni$_.JniResult Function(
@@ -130,15 +130,15 @@ extension type GamepadChannel._(jni$_.JObject _$this) implements jni$_.JObject {
             )
           >();
 
-  /// from: `static public com.marvinvogl.n_gamepad.MotionCallback assignMotionCallback(com.marvinvogl.n_gamepad.MotionCallback callback)`
+  /// from: `static public com.marvinvogl.n_gamepad.MotionCallable assignMotionCallable(com.marvinvogl.n_gamepad.MotionCallable callable)`
   /// The returned object must be released after use, by calling the [release] method.
-  static MotionCallback? assignMotionCallback(MotionCallback? callback) {
-    final _$callback = callback?.reference ?? jni$_.jNullReference;
-    return _assignMotionCallback(
+  static MotionCallable? assignMotionCallable(MotionCallable? callable) {
+    final _$callable = callable?.reference ?? jni$_.jNullReference;
+    return _assignMotionCallable(
       _class.reference.pointer,
-      _id_assignMotionCallback.pointer,
-      _$callback.pointer,
-    ).object<MotionCallback?>();
+      _id_assignMotionCallable.pointer,
+      _$callable.pointer,
+    ).object<MotionCallable?>();
   }
 
   static final _id_clearListener = _class.staticMethodId(
@@ -166,40 +166,6 @@ extension type GamepadChannel._(jni$_.JObject _$this) implements jni$_.JObject {
   static void clearListener() {
     _clearListener(_class.reference.pointer, _id_clearListener.pointer).check();
   }
-
-  static final _id_dispatchKeyEvent = _class.staticMethodId(
-    r'dispatchKeyEvent',
-    r'(II)Z',
-  );
-
-  static final _dispatchKeyEvent =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-                jni$_.VarArgs<(jni$_.Int32, jni$_.Int32)>,
-              )
-            >
-          >('globalEnv_CallStaticBooleanMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-              core$_.int,
-              core$_.int,
-            )
-          >();
-
-  /// from: `static public boolean dispatchKeyEvent(int keyCode, int action)`
-  static core$_.bool dispatchKeyEvent(core$_.int keyCode, core$_.int action) {
-    return _dispatchKeyEvent(
-      _class.reference.pointer,
-      _id_dispatchKeyEvent.pointer,
-      keyCode,
-      action,
-    ).boolean;
-  }
 }
 
 final class $GamepadChannel$Type$ extends jni$_.JType<GamepadChannel> {
@@ -211,17 +177,17 @@ final class $GamepadChannel$Type$ extends jni$_.JType<GamepadChannel> {
   String get signature => r'Lcom/marvinvogl/n_gamepad/GamepadChannel;';
 }
 
-/// from: `com.marvinvogl.n_gamepad.KeyCallback`
-extension type KeyCallback._(jni$_.JObject _$this) implements jni$_.JObject {
+/// from: `com.marvinvogl.n_gamepad.KeyCallable`
+extension type KeyCallable._(jni$_.JObject _$this) implements jni$_.JObject {
   static final _class = jni$_.JClass.forName(
-    r'com/marvinvogl/n_gamepad/KeyCallback',
+    r'com/marvinvogl/n_gamepad/KeyCallable',
   );
 
   /// The type which includes information such as the signature of this class.
-  static const jni$_.JType<KeyCallback> type = $KeyCallback$Type$();
+  static const jni$_.JType<KeyCallable> type = $KeyCallable$Type$();
 
   /// Maps a specific port to the implemented interface.
-  static final core$_.Map<core$_.int, $KeyCallback> _$impls = {};
+  static final core$_.Map<core$_.int, $KeyCallable> _$impls = {};
   static jni$_.JObjectPtr _$invoke(
     core$_.int port,
     jni$_.JObjectPtr descriptor,
@@ -247,10 +213,11 @@ extension type KeyCallback._(jni$_.JObject _$this) implements jni$_.JObject {
     try {
       final $d = $i.methodDescriptor.toDartString(releaseOriginal: true);
       final $a = $i.args;
-      if ($d == r'onKeyEvent(II)V') {
-        _$impls[$p]!.onKeyEvent(
+      if ($d == r'callback(III)V') {
+        _$impls[$p]!.callback(
           ($a![0] as jni$_.JInteger).toDartInt(releaseOriginal: true),
           ($a![1] as jni$_.JInteger).toDartInt(releaseOriginal: true),
+          ($a![2] as jni$_.JInteger).toDartInt(releaseOriginal: true),
         );
         return jni$_.nullptr;
       }
@@ -260,7 +227,7 @@ extension type KeyCallback._(jni$_.JObject _$this) implements jni$_.JObject {
     return jni$_.nullptr;
   }
 
-  static void implementIn(jni$_.JImplementer implementer, $KeyCallback $impl) {
+  static void implementIn(jni$_.JImplementer implementer, $KeyCallable $impl) {
     late final jni$_.RawReceivePort $p;
     $p = jni$_.RawReceivePort(($m) {
       if ($m == null) {
@@ -273,35 +240,35 @@ extension type KeyCallback._(jni$_.JObject _$this) implements jni$_.JObject {
       jni$_.ProtectedJniExtensions.returnResult($i.result, $r);
     });
     implementer.add(
-      r'com.marvinvogl.n_gamepad.KeyCallback',
+      r'com.marvinvogl.n_gamepad.KeyCallable',
       $p,
       _$invokePointer,
-      [if ($impl.onKeyEvent$async) r'onKeyEvent(II)V'],
+      [if ($impl.callback$async) r'callback(III)V'],
     );
     final $a = $p.sendPort.nativePort;
     _$impls[$a] = $impl;
   }
 
-  factory KeyCallback.implement($KeyCallback $impl) {
+  factory KeyCallable.implement($KeyCallable $impl) {
     final $i = jni$_.JImplementer();
     implementIn($i, $impl);
-    return $i.implement<KeyCallback>();
+    return $i.implement<KeyCallable>();
   }
 }
 
-extension KeyCallback$$Methods on KeyCallback {
-  static final _id_onKeyEvent = KeyCallback._class.instanceMethodId(
-    r'onKeyEvent',
-    r'(II)V',
+extension KeyCallable$$Methods on KeyCallable {
+  static final _id_callback = KeyCallable._class.instanceMethodId(
+    r'callback',
+    r'(III)V',
   );
 
-  static final _onKeyEvent =
+  static final _callback =
       jni$_.ProtectedJniExtensions.lookup<
             jni$_.NativeFunction<
               jni$_.JThrowablePtr Function(
                 jni$_.Pointer<jni$_.Void>,
                 jni$_.JMethodIDPtr,
-                jni$_.VarArgs<(jni$_.Int32, jni$_.Int32)>,
+                jni$_.VarArgs<(jni$_.Int32, jni$_.Int32, jni$_.Int32)>,
               )
             >
           >('globalEnv_CallVoidMethod')
@@ -311,64 +278,68 @@ extension KeyCallback$$Methods on KeyCallback {
               jni$_.JMethodIDPtr,
               core$_.int,
               core$_.int,
+              core$_.int,
             )
           >();
 
-  /// from: `public abstract void onKeyEvent(int keyCode, int action)`
-  void onKeyEvent(core$_.int keyCode, core$_.int action) {
-    _onKeyEvent(
+  /// from: `public abstract void callback(int id, int keyCode, int action)`
+  void callback(core$_.int id, core$_.int keyCode, core$_.int action) {
+    _callback(
       reference.pointer,
-      _id_onKeyEvent.pointer,
+      _id_callback.pointer,
+      id,
       keyCode,
       action,
     ).check();
   }
 }
 
-abstract base mixin class $KeyCallback {
-  factory $KeyCallback({
-    required void Function(core$_.int keyCode, core$_.int action) onKeyEvent,
-    core$_.bool onKeyEvent$async,
-  }) = _$KeyCallback;
+abstract base mixin class $KeyCallable {
+  factory $KeyCallable({
+    required void Function(core$_.int id, core$_.int keyCode, core$_.int action)
+    callback,
+    core$_.bool callback$async,
+  }) = _$KeyCallable;
 
-  void onKeyEvent(core$_.int keyCode, core$_.int action);
-  core$_.bool get onKeyEvent$async => false;
+  void callback(core$_.int id, core$_.int keyCode, core$_.int action);
+  core$_.bool get callback$async => false;
 }
 
-final class _$KeyCallback with $KeyCallback {
-  _$KeyCallback({
-    required this._onKeyEvent,
-    this.onKeyEvent$async = false,
+final class _$KeyCallable with $KeyCallable {
+  _$KeyCallable({
+    required this._callback,
+    this.callback$async = false,
   });
 
-  final void Function(core$_.int keyCode, core$_.int action) _onKeyEvent;
-  final core$_.bool onKeyEvent$async;
+  final void Function(core$_.int id, core$_.int keyCode, core$_.int action)
+  _callback;
+  final core$_.bool callback$async;
 
-  void onKeyEvent(core$_.int keyCode, core$_.int action) {
-    return _onKeyEvent(keyCode, action);
+  void callback(core$_.int id, core$_.int keyCode, core$_.int action) {
+    return _callback(id, keyCode, action);
   }
 }
 
-final class $KeyCallback$Type$ extends jni$_.JType<KeyCallback> {
+final class $KeyCallable$Type$ extends jni$_.JType<KeyCallable> {
   @jni$_.internal
-  const $KeyCallback$Type$();
+  const $KeyCallable$Type$();
 
   @jni$_.internal
   @core$_.override
-  String get signature => r'Lcom/marvinvogl/n_gamepad/KeyCallback;';
+  String get signature => r'Lcom/marvinvogl/n_gamepad/KeyCallable;';
 }
 
-/// from: `com.marvinvogl.n_gamepad.MotionCallback`
-extension type MotionCallback._(jni$_.JObject _$this) implements jni$_.JObject {
+/// from: `com.marvinvogl.n_gamepad.MotionCallable`
+extension type MotionCallable._(jni$_.JObject _$this) implements jni$_.JObject {
   static final _class = jni$_.JClass.forName(
-    r'com/marvinvogl/n_gamepad/MotionCallback',
+    r'com/marvinvogl/n_gamepad/MotionCallable',
   );
 
   /// The type which includes information such as the signature of this class.
-  static const jni$_.JType<MotionCallback> type = $MotionCallback$Type$();
+  static const jni$_.JType<MotionCallable> type = $MotionCallable$Type$();
 
   /// Maps a specific port to the implemented interface.
-  static final core$_.Map<core$_.int, $MotionCallback> _$impls = {};
+  static final core$_.Map<core$_.int, $MotionCallable> _$impls = {};
   static jni$_.JObjectPtr _$invoke(
     core$_.int port,
     jni$_.JObjectPtr descriptor,
@@ -394,8 +365,8 @@ extension type MotionCallback._(jni$_.JObject _$this) implements jni$_.JObject {
     try {
       final $d = $i.methodDescriptor.toDartString(releaseOriginal: true);
       final $a = $i.args;
-      if ($d == r'onMotionEvent(II)V') {
-        _$impls[$p]!.onMotionEvent(
+      if ($d == r'callback(II)V') {
+        _$impls[$p]!.callback(
           ($a![0] as jni$_.JInteger).toDartInt(releaseOriginal: true),
           ($a![1] as jni$_.JInteger).toDartInt(releaseOriginal: true),
         );
@@ -409,7 +380,7 @@ extension type MotionCallback._(jni$_.JObject _$this) implements jni$_.JObject {
 
   static void implementIn(
     jni$_.JImplementer implementer,
-    $MotionCallback $impl,
+    $MotionCallable $impl,
   ) {
     late final jni$_.RawReceivePort $p;
     $p = jni$_.RawReceivePort(($m) {
@@ -423,29 +394,29 @@ extension type MotionCallback._(jni$_.JObject _$this) implements jni$_.JObject {
       jni$_.ProtectedJniExtensions.returnResult($i.result, $r);
     });
     implementer.add(
-      r'com.marvinvogl.n_gamepad.MotionCallback',
+      r'com.marvinvogl.n_gamepad.MotionCallable',
       $p,
       _$invokePointer,
-      [if ($impl.onMotionEvent$async) r'onMotionEvent(II)V'],
+      [if ($impl.callback$async) r'callback(II)V'],
     );
     final $a = $p.sendPort.nativePort;
     _$impls[$a] = $impl;
   }
 
-  factory MotionCallback.implement($MotionCallback $impl) {
+  factory MotionCallable.implement($MotionCallable $impl) {
     final $i = jni$_.JImplementer();
     implementIn($i, $impl);
-    return $i.implement<MotionCallback>();
+    return $i.implement<MotionCallable>();
   }
 }
 
-extension MotionCallback$$Methods on MotionCallback {
-  static final _id_onMotionEvent = MotionCallback._class.instanceMethodId(
-    r'onMotionEvent',
+extension MotionCallable$$Methods on MotionCallable {
+  static final _id_callback = MotionCallable._class.instanceMethodId(
+    r'callback',
     r'(II)V',
   );
 
-  static final _onMotionEvent =
+  static final _callback =
       jni$_.ProtectedJniExtensions.lookup<
             jni$_.NativeFunction<
               jni$_.JThrowablePtr Function(
@@ -464,46 +435,41 @@ extension MotionCallback$$Methods on MotionCallback {
             )
           >();
 
-  /// from: `public abstract void onMotionEvent(int keyCode, int action)`
-  void onMotionEvent(core$_.int keyCode, core$_.int action) {
-    _onMotionEvent(
-      reference.pointer,
-      _id_onMotionEvent.pointer,
-      keyCode,
-      action,
-    ).check();
+  /// from: `public abstract void callback(int keyCode, int action)`
+  void callback(core$_.int keyCode, core$_.int action) {
+    _callback(reference.pointer, _id_callback.pointer, keyCode, action).check();
   }
 }
 
-abstract base mixin class $MotionCallback {
-  factory $MotionCallback({
-    required void Function(core$_.int keyCode, core$_.int action) onMotionEvent,
-    core$_.bool onMotionEvent$async,
-  }) = _$MotionCallback;
+abstract base mixin class $MotionCallable {
+  factory $MotionCallable({
+    required void Function(core$_.int keyCode, core$_.int action) callback,
+    core$_.bool callback$async,
+  }) = _$MotionCallable;
 
-  void onMotionEvent(core$_.int keyCode, core$_.int action);
-  core$_.bool get onMotionEvent$async => false;
+  void callback(core$_.int keyCode, core$_.int action);
+  core$_.bool get callback$async => false;
 }
 
-final class _$MotionCallback with $MotionCallback {
-  _$MotionCallback({
-    required this._onMotionEvent,
-    this.onMotionEvent$async = false,
+final class _$MotionCallable with $MotionCallable {
+  _$MotionCallable({
+    required this._callback,
+    this.callback$async = false,
   });
 
-  final void Function(core$_.int keyCode, core$_.int action) _onMotionEvent;
-  final core$_.bool onMotionEvent$async;
+  final void Function(core$_.int keyCode, core$_.int action) _callback;
+  final core$_.bool callback$async;
 
-  void onMotionEvent(core$_.int keyCode, core$_.int action) {
-    return _onMotionEvent(keyCode, action);
+  void callback(core$_.int keyCode, core$_.int action) {
+    return _callback(keyCode, action);
   }
 }
 
-final class $MotionCallback$Type$ extends jni$_.JType<MotionCallback> {
+final class $MotionCallable$Type$ extends jni$_.JType<MotionCallable> {
   @jni$_.internal
-  const $MotionCallback$Type$();
+  const $MotionCallable$Type$();
 
   @jni$_.internal
   @core$_.override
-  String get signature => r'Lcom/marvinvogl/n_gamepad/MotionCallback;';
+  String get signature => r'Lcom/marvinvogl/n_gamepad/MotionCallable;';
 }

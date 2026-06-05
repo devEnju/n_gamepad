@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:jni/jni.dart';
 
 import '../../interface/worker.dart';
@@ -9,38 +7,34 @@ import 'channel.g.dart';
 class AndroidWorker extends WorkerService {
   WorkerConfiguration configuration = const WorkerConfiguration();
 
-  KeyCallback? listener;
+  late final KeyCallable? listener;
 
   @override
-  void workerMethod(SendPort mainSendPort) {
+  void workerMethod(WorkerGamepad Function() init) {
     final implementer = JImplementer();
 
-    KeyCallback.implementIn(
+    KeyCallable.implementIn(
       implementer,
-      $KeyCallback(
-        onKeyEvent: (keyCode, action) {
-          mainSendPort.send([keyCode, action]);
+      $KeyCallable(
+        callback: (id, keyCode, action) {
+          // TODO
+          // instantiation of WorkerGamepad for ID if not already existing
+          // state update for that specific gamepad
+          // instantiation only happens with lambda to ensure normal or network mode
+          // network mode has WorkerGamepad with Network instances for button, joystick, etc.
+
+          // port.send([keyCode, action]);
         },
       ),
     );
 
-    listener = GamepadChannel.assignKeyCallback(
-      implementer.implement<KeyCallback>(),
+    listener = GamepadChannel.assignKeyCallable(
+      implementer.implement<KeyCallable>(),
     );
   }
 
   @override
   void dispose() {
     listener?.release();
-  }
-
-  @override
-  void handleCommand(WorkerCommand command) {
-    if (command is WorkerConfiguration) {
-      configuration = command;
-    }
-    if (command is StopWorker) {
-      dispose();
-    }
   }
 }

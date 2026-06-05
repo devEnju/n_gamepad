@@ -23,17 +23,25 @@ class KeyListener(
     val dispatcher = KeyDispatcher()
 
     override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null) {
-            if (event.isFromSource(InputDevice.SOURCE_GAMEPAD)) {
-                Gamepad.button[keyCode]?.onEvent(event) ?: return false
+        if (Gamepad.check || event == null) return false
 
-                return connection.send(buffer)
-            }
-            if (event.isFromSource(InputDevice.SOURCE_DPAD)) {
-                Gamepad.dpad.onEvent(event)
+        if (event.isFromSource(InputDevice.SOURCE_GAMEPAD)) {
+            val callable = GamepadChannel.getKey() ?: return true
+            val gamepad = Gamepad.registerDevice(event.deviceId) ?: return true
+            val index = gamepad.button.indexOfKey(keyCode)
 
-                return connection.send(buffer)
+            if (index < 0) {
+                return false
             }
+            if (gamepad.button.valueAt(index) && event.repeatCount == 0) {
+                callable.callback(gamepad.id, keyCode, event.action)
+            }
+            return true
+        }
+        if (event.isFromSource(InputDevice.SOURCE_DPAD)) {
+            Gamepad.dpad.onEvent(event)
+
+            return connection.send(buffer)
         }
         return false
     }

@@ -15,16 +15,18 @@ import 'services/stream_service.dart';
 ///
 /// Use the singleton [instance] to access the methods provided by this class.
 class Gamepad {
-  factory Gamepad(String id) {
+  factory Gamepad(Enum id) {
     InputService.instance ??= InputService();
 
-    return _map.putIfAbsent(id, () => Gamepad._internal());
+    return _map.putIfAbsent(id.index, () => Gamepad._internal(id.index));
   }
 
-  static final _map = <String, Gamepad>{};
+  static final _map = <int, Gamepad>{};
 
   /// Private constructor to enforce singleton pattern.
-  Gamepad._internal();
+  Gamepad._internal(int id) {
+    GamepadPlatform.instance.createDevice();
+  }
 
   /// Assigns press and release listeners to a specified [Button].
   ///
@@ -130,7 +132,7 @@ class NetworkGamepad extends Gamepad {
   }
 
   /// Private constructor to enforce singleton pattern.
-  NetworkGamepad._internal() : super._internal();
+  NetworkGamepad._internal() : super._internal(-1);
 
   /// The unique instance of the [NetworkGamepad] class.
   static final instance = NetworkGamepad._internal();

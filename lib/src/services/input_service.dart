@@ -27,6 +27,8 @@ class InputService {
     _receiver!.listen((message) {
       if (message is WorkerMessage) {
         _receiveMessage(message);
+      } else if (message is SendPort) {
+        _port = message;
       } else {
         _controller!.addError(ArgumentError.value(message, 'message'));
       }
@@ -43,9 +45,7 @@ class InputService {
   }
 
   void _receiveMessage(WorkerMessage message) {
-    if (message is WorkerStarted) {
-      _port = message.sendPort;
-    } else if (message is WorkerData) {
+    if (message is WorkerData) {
       _controller!.add(message);
     }
   }
@@ -64,30 +64,27 @@ class InputService {
 }
 
 void _workerMain(Bootstrap bootstrap) {
-  workerMain(bootstrap);
+  final (receiver, port, service) = workerMain(bootstrap);
+
+  service.workerMethod(() => WorkerGamepad(port));
+
+  receiver.listen((dynamic command) => workerListener(command, service));
 }
 
-(SendPort, WorkerService) workerMain(Bootstrap bootstrap) {
+void workerListener(dynamic command, WorkerService service) {
+  if (command is StopWorker) {
+    service.dispose();
+    Isolate.exit();
+  }
+}
+
+(ReceivePort, SendPort, WorkerService) workerMain(Bootstrap bootstrap) {
   final (port, worker) = bootstrap;
 
   final receiver = ReceivePort();
   final service = worker();
 
-  port.send(WorkerStarted(receiver.sendPort));
+  port.send(receiver.sendPort);
 
-  late StreamSubscription<dynamic> subscription;
-
-  subscription = receiver.listen((dynamic message) {
-    if (message is WorkerCommand) {
-      service.handleCommand(message);
-    }
-    if (message is StopWorker) {
-      subscription.cancel();
-      receiver.close();
-    }
-  });
-
-  service.workerMethod(port);
-
-  return (port, service);
+  return (receiver, port, service);
 }

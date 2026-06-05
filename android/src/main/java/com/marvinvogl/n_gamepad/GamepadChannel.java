@@ -4,17 +4,17 @@ import androidx.annotation.Keep;
 
 @Keep
 public final class GamepadChannel {
-  private static KeyCallback key;
-  private static MotionCallback motion;
+  private static KeyCallable key;
+  private static MotionCallable motion;
 
-  public static KeyCallback assignKeyCallback(KeyCallback callback) {
-    key = callback;
-    return callback;
+  public static KeyCallable assignKeyCallable(KeyCallable callable) {
+    key = callable;
+    return callable;
   }
 
-  public static MotionCallback assignMotionCallback(MotionCallback callback) {
-    motion = callback;
-    return callback;
+  public static MotionCallable assignMotionCallable(MotionCallable callable) {
+    motion = callable;
+    return callable;
   }
 
   public static void clearListener() {
@@ -22,12 +22,11 @@ public final class GamepadChannel {
     motion = null;
   }
 
-  public static boolean dispatchKeyEvent(int keyCode, int action) {
-    if (key != null) {
-      key.onKeyEvent(keyCode, action);
-      return true;
-    }
+  static KeyCallable getKey() {
+    return key;
+  }
 
-    return false;
+  static MotionCallable getMotion() {
+    return motion;
   }
 }

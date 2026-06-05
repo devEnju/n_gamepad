@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:n_gamepad/n_gamepad.dart';
 
 void main() {
-  Gamepad('');
+  Gamepad(Player.one);
 
   runApp(const MyApp());
 }
@@ -27,7 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final gamepad = Gamepad('');
+  final gamepad = Gamepad(Player.one);
 
   final map = <Enum, bool>{
     Button.a: false,
@@ -123,4 +123,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void onGamepadDpadEvent(DpadEvent event) {
     setState(() => text = '$event');
   }
+}
+
+enum Player {
+  one
 }

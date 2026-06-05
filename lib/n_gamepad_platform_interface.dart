@@ -95,6 +95,14 @@ abstract class GamepadPlatform extends PlatformInterface {
     throw UnimplementedError('triggerEvents has not been implemented.');
   }
 
+  void createDevice() {
+    throw UnimplementedError('test');
+  }
+
+  void configureDevice(Map<Control, bool?> map) {
+    throw UnimplementedError('test');
+  }
+
   WorkerService Function() instantiateWorker() {
     throw UnimplementedError('test');
   }

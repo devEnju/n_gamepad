@@ -1,9 +1,39 @@
 package com.marvinvogl.n_gamepad
 
+import android.util.SparseBooleanArray
+import android.util.SparseIntArray
 import android.view.KeyEvent
+import androidx.core.util.size
 
 class Gamepad {
+    val id: Int = list.size
+    val button = SparseBooleanArray()
+
+    init {
+        list.add(this)
+    }
     companion object {
+        private val list = mutableListOf<Gamepad>()
+        private val map = SparseIntArray()
+
+        val check get() = list.isEmpty()
+
+        fun registerDevice(id: Int): Gamepad? {
+            val count = map.size
+            val index = map.get(id, count)
+
+            // if (offline) before putting new devices in
+            if (index != count) {
+                return list[index]
+            }
+            if (index < list.size) {
+                map.put(id, index)
+                return list[index]
+            }
+            return null
+        }
+
+
         val gyroscope = Gyroscope()
         val accelerometer = Accelerometer()
 
